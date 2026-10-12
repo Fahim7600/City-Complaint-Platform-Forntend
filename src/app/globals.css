@@ -1,0 +1,227 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --font-mono: var(--font-mono);
+
+  --color-teal-100: #9ad6c9;
+  --color-teal-300: #77b7a8;
+  --color-teal-500: #559988;
+  --color-teal-700: #327c69;
+  --color-teal-900: #03604c;
+
+  --color-violet-400: #c084fc;
+  --color-violet-500: #a855f7;
+  --color-violet-600: #9333ea;
+
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.3);
+  --radius-2xl: calc(var(--radius) * 1.7);
+}
+
+:root {
+  /* Light Mode: Soft off-white/mint background, teal-900 text, teal primary, violet accent */
+  --background: #f4faf7;
+  --foreground: #03604c;
+
+  --card: #ffffff;
+  --card-foreground: #03604c;
+
+  --popover: #ffffff;
+  --popover-foreground: #03604c;
+
+  --primary: #327c69;
+  --primary-foreground: #ffffff;
+
+  --secondary: #e2f3ee;
+  --secondary-foreground: #03604c;
+
+  --muted: #e7f4f0;
+  --muted-foreground: #4a7b70;
+
+  --accent: #a855f7;
+  --accent-foreground: #ffffff;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+
+  --border: #cde4dd;
+  --input: #cde4dd;
+  --ring: #a855f7;
+
+  --radius: 0.625rem;
+
+  --sidebar: #f0f8f5;
+  --sidebar-foreground: #03604c;
+  --sidebar-primary: #327c69;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e2f3ee;
+  --sidebar-accent-foreground: #03604c;
+  --sidebar-border: #cde4dd;
+  --sidebar-ring: #a855f7;
+
+  --chart-1: #327c69;
+  --chart-2: #a855f7;
+  --chart-3: #559988;
+  --chart-4: #c084fc;
+  --chart-5: #03604c;
+}
+
+.dark {
+  /* Dark Mode: Deep teal-black background (~#04201a), mint text (#9ad6c9), teal-300 primary (#77b7a8), violet-400 accent (#c084fc) */
+  --background: #04201a;
+  --foreground: #9ad6c9;
+
+  --card: #082921;
+  --card-foreground: #e4f7f2;
+
+  --popover: #082921;
+  --popover-foreground: #e4f7f2;
+
+  --primary: #77b7a8;
+  --primary-foreground: #04201a;
+
+  --secondary: #0c382f;
+  --secondary-foreground: #9ad6c9;
+
+  --muted: #0a332a;
+  --muted-foreground: #70aca0;
+
+  --accent: #c084fc;
+  --accent-foreground: #04201a;
+
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+
+  --border: #144b3e;
+  --input: #175446;
+  --ring: #c084fc;
+
+  --sidebar: #06261f;
+  --sidebar-foreground: #9ad6c9;
+  --sidebar-primary: #77b7a8;
+  --sidebar-primary-foreground: #04201a;
+  --sidebar-accent: #0c382f;
+  --sidebar-accent-foreground: #9ad6c9;
+  --sidebar-border: #144b3e;
+  --sidebar-ring: #c084fc;
+
+  --chart-1: #77b7a8;
+  --chart-2: #c084fc;
+  --chart-3: #9ad6c9;
+  --chart-4: #a855f7;
+  --chart-5: #559988;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), var(--font-sans), sans-serif;
+  }
+}
+
+/* Animated gradient utility: shifts smoothly between teal and violet */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.bg-animated-gradient {
+  background: linear-gradient(135deg, #03604c, #327c69, #77b7a8, #7c3aed, #a855f7, #327c69);
+  background-size: 320% 320%;
+  animation: gradientShift 14s ease infinite;
+}
+
+.dark .bg-animated-gradient {
+  background: linear-gradient(135deg, #04201a, #0b382e, #327c69, #581c87, #a855f7, #082921);
+  background-size: 320% 320%;
+  animation: gradientShift 14s ease infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-animated-gradient {
+    animation: none !important;
+    background-position: 50% 50% !important;
+  }
+}
+
+/* Card hover-lift utility with soft violet/teal glow */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px -8px rgba(168, 85, 247, 0.2), 0 4px 14px -2px rgba(50, 124, 105, 0.18);
+  border-color: rgba(168, 85, 247, 0.45);
+}
+
+.dark .hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px -10px rgba(192, 132, 252, 0.3), 0 0 24px -4px rgba(119, 183, 168, 0.22);
+  border-color: rgba(192, 132, 252, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hover-lift:hover {
+    transform: none !important;
+  }
+}
