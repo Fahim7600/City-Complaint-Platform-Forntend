@@ -104,10 +104,35 @@ apiClient.interceptors.response.use(
  */
 export const getErrorMessage = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
+    // 1. Timeout (code ECONNABORTED) -> Server is waking up
+    if (
+      error.code === "ECONNABORTED" ||
+      error.message?.toLowerCase().includes("timeout")
+    ) {
+      return "Server is waking up, please try again in a few seconds";
+    }
+
+    // 2. No response at all (error.request exists but error.response doesn't)
+    if (error.request && !error.response) {
+      return "Can't reach the server. Please check your connection or try again shortly.";
+    }
+
     const data = error.response?.data as ApiResponse | undefined;
 
+    // 3. 403 whose message is "Origin not allowed by CORS"
+    if (
+      error.response?.status === 403 &&
+      (data?.message === "Origin not allowed by CORS" ||
+        (typeof data?.message === "string" &&
+          data.message.toLowerCase().includes("origin not allowed by cors")) ||
+        error.message === "Origin not allowed by CORS")
+    ) {
+      return "This site isn't allowed by the server yet (CORS). Contact the admin.";
+    }
+
+    // 4. Backend response received: keep the backend's message, including zod validation messages
     if (data) {
-      // 1. Check if specific validation errors are provided
+      // Check if specific validation errors array is provided
       if (Array.isArray(data.errors) && data.errors.length > 0) {
         const firstError = data.errors[0];
         if (typeof firstError === "string") return firstError;
@@ -121,7 +146,7 @@ export const getErrorMessage = (error: unknown): string => {
         }
       }
 
-      // 2. Check if errors is an object with field arrays (e.g. { title: ["Too short"] })
+      // Check if errors is an object with field arrays (e.g. { title: ["Too short"] })
       if (
         data.errors &&
         typeof data.errors === "object" &&
@@ -138,19 +163,18 @@ export const getErrorMessage = (error: unknown): string => {
         }
       }
 
-      // 3. Check standard backend message
+      // Keep standard backend message
       if (typeof data.message === "string" && data.message.trim().length > 0) {
         return data.message;
       }
     }
 
-    // 4. Fallback HTTP status messages
+    // 5. Fallback HTTP status messages
     if (error.response?.status === 404) return "Requested resource was not found.";
     if (error.response?.status === 403) return "You do not have permission to perform this action.";
     if (error.response?.status === 401) return "Session expired or unauthorized. Please sign in.";
     if (error.response?.status === 429) return "Too many requests. Please try again later.";
     if (error.response?.status === 500) return "Server error. Please try again in a few moments.";
-    if (error.message === "Network Error") return "Network connection error. Check your internet connectivity.";
 
     return error.message || "An unexpected error occurred.";
   }
