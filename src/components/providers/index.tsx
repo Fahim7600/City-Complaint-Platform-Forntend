@@ -4,6 +4,7 @@ import * as React from "react";
 import { ThemeProvider } from "./theme-provider";
 import { QueryProvider } from "./query-provider";
 import { GoogleOAuthProvider } from "./google-provider";
+import { AuthProvider } from "./auth-provider";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -20,20 +21,22 @@ export function Providers({ children }: ProvidersProps) {
       disableTransitionOnChange
     >
       <QueryProvider>
-        <GoogleOAuthProvider>
-          <TooltipProvider delay={200}>
-            {children}
-            <Toaster
-              position="top-center"
-              richColors
-              closeButton
-              duration={4000}
-            />
-          </TooltipProvider>
-        </GoogleOAuthProvider>
+        <AuthProvider>
+          <GoogleOAuthProvider>
+            <TooltipProvider delay={200}>
+              {children}
+              <Toaster
+                position="top-center"
+                richColors
+                closeButton
+                duration={4000}
+              />
+            </TooltipProvider>
+          </GoogleOAuthProvider>
+        </AuthProvider>
       </QueryProvider>
     </ThemeProvider>
   );
 }
 
-export { ThemeProvider, QueryProvider, GoogleOAuthProvider };
+export { ThemeProvider, QueryProvider, GoogleOAuthProvider, AuthProvider };
