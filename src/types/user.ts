@@ -27,6 +27,7 @@ export interface User {
   isAvailable: boolean;
   phone: string | null;
   avatarUrl: string | null;
+  googleId?: string | null;
   departmentId: string | null;
   requestedRole: Role | null;
   approvalStatus: ApprovalStatus | null;
