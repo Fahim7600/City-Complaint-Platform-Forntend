@@ -1,5 +1,6 @@
+import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -65,7 +66,20 @@ export default function ThemePreviewPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* // TEMP: Temporary authentication navigation until full navbar prompt */}
+            <Link
+              href="/login"
+              className={buttonVariants({ variant: "neon", size: "sm" })}
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/register"
+              className={buttonVariants({ variant: "outline", size: "sm" })}
+            >
+              Create account
+            </Link>
             <ThemeToggle />
           </div>
         </div>

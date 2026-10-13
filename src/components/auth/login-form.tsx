@@ -31,6 +31,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/use-auth";
+import { apiClient } from "@/lib/axios";
 import { DEMO_ACCOUNTS, type DemoAccount } from "@/lib/demo-accounts";
 import { loginSchema, type LoginFormData } from "@/schemas/auth.schema";
 import type { Role } from "@/types/user";
@@ -45,6 +46,11 @@ export function LoginForm() {
 
   const [showPassword, setShowPassword] = React.useState(false);
   const [activeDemoRole, setActiveDemoRole] = React.useState<Role | null>(null);
+
+  // Cold-start warm-up: silently ping backend to wake Render server
+  React.useEffect(() => {
+    apiClient.get("/public/categories").catch(() => {});
+  }, []);
 
   // Show session expired notification if redirected from token expiration
   React.useEffect(() => {

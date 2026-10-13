@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/use-auth";
 import { setTokens } from "@/lib/auth-cookies";
-import { getErrorMessage } from "@/lib/axios";
+import { apiClient, getErrorMessage } from "@/lib/axios";
 import { registerSchema, type RegisterFormData } from "@/schemas/auth.schema";
 import { authService } from "@/services/auth.service";
 import { useAuthStore } from "@/store/auth-store";
@@ -29,6 +29,11 @@ export function RegisterForm() {
 
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+
+  // Cold-start warm-up: silently ping backend to wake Render server
+  React.useEffect(() => {
+    apiClient.get("/public/categories").catch(() => {});
+  }, []);
 
   const {
     register,
