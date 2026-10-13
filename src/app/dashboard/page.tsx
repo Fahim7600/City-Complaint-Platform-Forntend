@@ -2,7 +2,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { TempRoleDashboard } from "@/components/auth/temp-role-dashboard";
-import { Loader2 } from "lucide-react";
+import { PageSkeleton } from "@/components/shared/skeletons";
 
 export const metadata: Metadata = {
   title: "Citizen Dashboard",
@@ -11,13 +11,7 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex h-screen items-center justify-center">
-          <Loader2 className="size-8 animate-spin text-primary" />
-        </div>
-      }
-    >
+    <Suspense fallback={<PageSkeleton />}>
       <TempRoleDashboard expectedRole="CITIZEN" title="Citizen Dashboard" />
     </Suspense>
   );

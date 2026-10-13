@@ -2,8 +2,6 @@
 
 // TEMP: Component for testing authentication & role-based routing
 import * as React from "react";
-import { useSearchParams } from "next/navigation";
-import { toast } from "sonner";
 import { LogOut, Shield, Sparkles, UserCheck, Wrench, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,15 +21,7 @@ interface TempRoleDashboardProps {
 }
 
 export function TempRoleDashboard({ expectedRole, title }: TempRoleDashboardProps) {
-  const searchParams = useSearchParams();
-  const deniedParam = searchParams.get("denied");
   const { user, role, logout, isLoading } = useAuth();
-
-  React.useEffect(() => {
-    if (deniedParam === "1") {
-      toast.error("You don't have access to that page.");
-    }
-  }, [deniedParam]);
 
   const getRoleIcon = () => {
     switch (expectedRole) {
@@ -47,8 +37,8 @@ export function TempRoleDashboard({ expectedRole, title }: TempRoleDashboardProp
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-      <Card className="w-full max-w-lg border border-border shadow-xl">
+    <div className="flex items-center justify-center py-6 sm:py-12">
+      <Card className="w-full max-w-lg border border-border/80 shadow-xl bg-card/80 backdrop-blur-sm">
         <CardHeader className="text-center pb-2">
           <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-muted/80 mb-3 shadow-inner">
             {getRoleIcon()}
