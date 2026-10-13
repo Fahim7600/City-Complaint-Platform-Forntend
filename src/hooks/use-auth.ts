@@ -87,6 +87,12 @@ export function useAuth() {
     setLoading(true);
     const demo = DEMO_ACCOUNTS[role];
 
+    if (!demo || !demo.email || !demo.password) {
+      setLoading(false);
+      toast.error("Demo account not configured");
+      throw new Error("Demo account not configured");
+    }
+
     try {
       // First attempt standard login with seeded credentials
       let response;

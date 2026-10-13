@@ -30,6 +30,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/use-auth";
 import { apiClient } from "@/lib/axios";
 import { DEMO_ACCOUNTS, type DemoAccount } from "@/lib/demo-accounts";
@@ -232,60 +238,85 @@ export function LoginForm() {
       </div>
 
       {/* 5. Four Responsive Demo Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-        {(Object.keys(DEMO_ACCOUNTS) as Role[]).map((role) => {
-          const demo = DEMO_ACCOUNTS[role];
-          const isThisLoading = activeDemoRole === role;
+      <TooltipProvider delay={100}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          {(Object.keys(DEMO_ACCOUNTS) as Role[]).map((role) => {
+            const demo = DEMO_ACCOUNTS[role];
+            const isThisLoading = activeDemoRole === role;
+            const isConfigured = demo.isConfigured;
 
-          return (
-            <Card
-              key={role}
-              className={`hover-lift border border-border/80 transition-all duration-300 bg-card/80 ${demo.glowColor}`}
-            >
-              <CardHeader className="p-3.5 pb-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="flex size-7 items-center justify-center rounded-lg bg-muted/80">
-                      {renderDemoIcon(demo.iconName)}
+            const card = (
+              <Card
+                key={role}
+                className={`border border-border/80 transition-all duration-300 bg-card/80 ${
+                  isConfigured
+                    ? `hover-lift ${demo.glowColor}`
+                    : "opacity-60 cursor-not-allowed"
+                }`}
+              >
+                <CardHeader className="p-3.5 pb-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="flex size-7 items-center justify-center rounded-lg bg-muted/80">
+                        {renderDemoIcon(demo.iconName)}
+                      </div>
+                      <CardTitle className="text-sm font-bold">
+                        {demo.name.replace("Demo ", "")}
+                      </CardTitle>
                     </div>
-                    <CardTitle className="text-sm font-bold">
-                      {demo.name.replace("Demo ", "")}
-                    </CardTitle>
+                    <Badge
+                      variant="outline"
+                      className={`text-[10px] px-1.5 py-0 ${demo.badgeColor}`}
+                    >
+                      {role}
+                    </Badge>
                   </div>
-                  <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${demo.badgeColor}`}>
-                    {role}
-                  </Badge>
-                </div>
-                <CardDescription className="text-xs line-clamp-2 mt-1">
-                  {demo.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-3.5 pt-1">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  disabled={isSubmitting || activeDemoRole !== null}
-                  onClick={() => handleDemoLogin(role)}
-                  className="w-full text-xs font-semibold hover:border-primary/50"
-                >
-                  {isThisLoading ? (
-                    <>
-                      <Loader2 className="size-3.5 animate-spin mr-1.5" />
-                      Logging in...
-                    </>
-                  ) : (
-                    <>
-                      <Zap className="size-3 mr-1 text-accent" />
-                      Demo Login
-                    </>
-                  )}
-                </Button>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+                  <CardDescription className="text-xs line-clamp-2 mt-1">
+                    {demo.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-3.5 pt-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={
+                      !isConfigured || isSubmitting || activeDemoRole !== null
+                    }
+                    onClick={() => isConfigured && handleDemoLogin(role)}
+                    className="w-full text-xs font-semibold hover:border-primary/50 disabled:pointer-events-none"
+                  >
+                    {isThisLoading ? (
+                      <>
+                        <Loader2 className="size-3.5 animate-spin mr-1.5" />
+                        Logging in...
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="size-3 mr-1 text-accent" />
+                        Demo Login
+                      </>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+
+            if (!isConfigured) {
+              return (
+                <Tooltip key={role}>
+                  <TooltipTrigger render={card} />
+                  <TooltipContent side="top">
+                    <p>Demo account not configured</p>
+                  </TooltipContent>
+                </Tooltip>
+              );
+            }
+
+            return card;
+          })}
+        </div>
+      </TooltipProvider>
 
       {/* Render Wake-up Note */}
       <p className="text-center text-xs text-muted-foreground italic">
