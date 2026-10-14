@@ -50,7 +50,6 @@ export function OverviewView() {
   // 2. Fetch escalated complaints for badge and recent escalations card
   const {
     data: escalatedData,
-    isLoading: isEscalatedLoading,
     refetch: refetchEscalated,
   } = useQuery({
     queryKey: queryKeys.admin.escalatedComplaints({ limit: 5 }),

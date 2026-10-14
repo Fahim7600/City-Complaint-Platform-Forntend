@@ -62,7 +62,7 @@ export function OverviewCharts({ stats }: OverviewChartsProps) {
   const statusPieData = React.useMemo(() => {
     const map = normalizeCounts(stats.complaints.byStatus, "status");
     return Object.entries(map)
-      .filter(([_, count]) => count > 0)
+      .filter(([, count]) => count > 0)
       .map(([status, count]) => ({
         name: status.replace("_", " "),
         statusKey: status,
