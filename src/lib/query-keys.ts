@@ -101,4 +101,10 @@ export const queryKeys = {
     list: (params?: ListNotificationsQuery) =>
       [...queryKeys.notifications.all, "list", params] as const,
   },
+
+  staffApplications: {
+    all: ["staff-applications"] as const,
+    list: (params?: { page?: number; limit?: number }) =>
+      ["staff-applications", "list", params] as const,
+  },
 } as const;

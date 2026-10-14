@@ -6,12 +6,8 @@ import {
   ArrowRight,
   Briefcase,
   CheckCircle2,
-  Clock,
-  ExternalLink,
   GraduationCap,
   Star,
-  User,
-  Wrench,
 } from "lucide-react";
 import {
   Sheet,
@@ -21,7 +17,6 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { QueueSlaChip } from "./queue-sla-chip";

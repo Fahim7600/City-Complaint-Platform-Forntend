@@ -54,20 +54,17 @@ export function QueueFilters() {
   });
 
   // Filter to this manager's department's categories if departmentId is available
-  const departmentCategories = React.useMemo(() => {
-    if (!user?.departmentId) return categories;
-    const filtered = categories.filter(
-      (cat) => cat.departmentId === user.departmentId
-    );
-    return filtered.length > 0 ? filtered : categories;
-  }, [categories, user?.departmentId]);
+  const departmentId = user?.departmentId;
+  const filteredCategories = departmentId
+    ? categories.filter((cat) => cat.departmentId === departmentId)
+    : categories;
+  const departmentCategories =
+    filteredCategories.length > 0 ? filteredCategories : categories;
 
-  const categoryOptions = React.useMemo(() => {
-    return departmentCategories.map((cat) => ({
-      value: cat.id,
-      label: cat.name,
-    }));
-  }, [departmentCategories]);
+  const categoryOptions = departmentCategories.map((cat) => ({
+    value: cat.id,
+    label: cat.name,
+  }));
 
   const hasActiveFilters =
     Boolean(q) ||

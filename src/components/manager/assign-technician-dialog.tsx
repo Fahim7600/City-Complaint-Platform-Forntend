@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Check, Loader2, Search, Star, UserCheck, Users, X } from "lucide-react";
+import { Check, Loader2, Search, Star, UserCheck, Users } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -21,7 +21,6 @@ import { complaintService } from "@/services/complaint.service";
 import { queryKeys } from "@/lib/query-keys";
 import { getErrorMessage } from "@/lib/axios";
 import { ComplaintStatus, type Complaint } from "@/types/complaint";
-import type { DepartmentTechnician } from "@/types/department";
 import type { PaginatedData } from "@/types/api";
 import { cn } from "@/lib/utils";
 

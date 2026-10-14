@@ -6,15 +6,10 @@ import {
   AlertCircle,
   AlertTriangle,
   ArrowUpRight,
-  Building2,
-  Calendar,
-  CheckCircle2,
   Copy,
   Flame,
   Loader2,
   MapPin,
-  Star,
-  User,
   UserCheck,
   UserX,
   Wrench,
@@ -44,7 +39,6 @@ import { complaintService } from "@/services/complaint.service";
 import { queryKeys } from "@/lib/query-keys";
 import { formatDate } from "@/lib/format-date";
 import { ComplaintStatus } from "@/types/complaint";
-import { cn } from "@/lib/utils";
 
 interface ComplaintSheetProps {
   complaintId: string | null;

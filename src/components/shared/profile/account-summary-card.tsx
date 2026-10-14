@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ArrowUpRight, Building2, Calendar, Crown, ShieldAlert, User } from "lucide-react";
+import { ArrowUpRight, Building2, Calendar, Crown, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/format-date";

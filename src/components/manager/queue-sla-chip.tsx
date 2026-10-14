@@ -12,6 +12,16 @@ interface QueueSlaChipProps {
 }
 
 export function QueueSlaChip({ slaDueAt, status, className }: QueueSlaChipProps) {
+  const [now, setNow] = React.useState<number>(() => Date.now());
+
+  React.useEffect(() => {
+    // Update every minute for live countdown
+    const interval = setInterval(() => {
+      setNow(Date.now());
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   const isTerminal =
     status === ComplaintStatus.RESOLVED ||
     status === ComplaintStatus.CLOSED ||
@@ -46,7 +56,6 @@ export function QueueSlaChip({ slaDueAt, status, className }: QueueSlaChipProps)
   }
 
   const dueTime = new Date(slaDueAt).getTime();
-  const now = Date.now();
   const diffMs = dueTime - now;
 
   // Overdue: past due date

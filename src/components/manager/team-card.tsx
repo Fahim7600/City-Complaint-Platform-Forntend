@@ -2,11 +2,9 @@
 
 import * as React from "react";
 import {
-  Briefcase,
   CheckCircle2,
   Clock,
   Star,
-  User,
   Wrench,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
