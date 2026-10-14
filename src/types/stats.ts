@@ -28,15 +28,16 @@ export interface DepartmentDashboardBreakdown {
   technicianCount: number;
   complaintsByStatus: Record<string, number>;
   totalComplaints: number;
+  overdueCount: number;
 }
 
 export interface DashboardStats {
   users: {
-    byRole: Record<string, number>;
+    byRole: Array<{ role: string; _count: number | { _all: number } }> | Record<string, number>;
     deactivated: number;
   };
   complaints: {
-    byStatus: Record<string, number>;
+    byStatus: Array<{ status: string; _count: number | { _all: number } }> | Record<string, number>;
     overdue: number;
   };
   revenue: {

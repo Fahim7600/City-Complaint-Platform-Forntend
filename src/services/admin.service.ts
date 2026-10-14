@@ -256,12 +256,16 @@ export const adminService = {
   async triggerCheckOverdueSlas(): Promise<{
     checkedCount?: number;
     overdueCount?: number;
+    complaintsProcessed?: number;
+    notificationsSent?: number;
     message?: string;
   }> {
     const res = await apiClient.post<
       ApiResponse<{
         checkedCount?: number;
         overdueCount?: number;
+        complaintsProcessed?: number;
+        notificationsSent?: number;
         message?: string;
       }>
     >("/admin/jobs/check-overdue-slas");

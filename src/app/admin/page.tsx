@@ -1,18 +1,18 @@
-// TEMP: Platform Administrator Portal Page (to be replaced in later prompts)
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { TempRoleDashboard } from "@/components/auth/temp-role-dashboard";
+import { OverviewView } from "@/components/admin/overview-view";
 import { PageSkeleton } from "@/components/shared/skeletons";
 
 export const metadata: Metadata = {
-  title: "Administrator Portal",
-  description: "Administrative console for municipal executive oversight and platform governance.",
+  title: "City Overview | CityFix Administration",
+  description:
+    "Executive civic operations dashboard, SLA telemetry, and department performance monitoring.",
 };
 
-export default function AdminPage() {
+export default function AdminOverviewPage() {
   return (
     <Suspense fallback={<PageSkeleton />}>
-      <TempRoleDashboard expectedRole="ADMIN" title="Administrator Portal" />
+      <OverviewView />
     </Suspense>
   );
 }
