@@ -225,3 +225,28 @@
     transform: none !important;
   }
 }
+
+/* Confetti Burst Animation (Pure CSS, respects prefers-reduced-motion) */
+@keyframes confettiBurst {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(0);
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rot, 0deg)) scale(1);
+    opacity: 0;
+  }
+}
+
+.animate-confetti {
+  animation: confettiBurst 1.3s cubic-bezier(0.12, 0.8, 0.32, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-confetti {
+    display: none !important;
+  }
+}
