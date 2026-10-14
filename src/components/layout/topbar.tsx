@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, User, LogOut, ChevronRight, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -159,6 +160,16 @@ export function Topbar({ role, title, breadcrumb }: TopbarProps) {
 
       {/* Right side: NotificationBell, ThemeToggle, User Avatar Dropdown */}
       <div className="flex items-center gap-2 shrink-0">
+        {user?.isPremium && (
+          <Link
+            href="/dashboard/subscription"
+            title="Premium Citizen Active"
+            className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-500 text-xs font-bold shadow-[0_0_12px_rgba(245,158,11,0.2)] hover:bg-amber-500/15 transition-all duration-300"
+          >
+            <Crown className="size-3.5 fill-amber-500 text-amber-500" />
+            <span>Premium</span>
+          </Link>
+        )}
         <NotificationBell />
         <ThemeToggle />
 

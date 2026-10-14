@@ -30,13 +30,18 @@ export function proxy(request: NextRequest) {
 
   const isAuthRoute = pathname === "/login" || pathname === "/register";
 
+  const isPaymentSuccessRoute =
+    pathname.startsWith("/payment/success") ||
+    pathname.startsWith("/premium/success");
+
   // Check role-protected prefixes
   const isProtected =
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/technician") ||
     pathname.startsWith("/manager") ||
     pathname.startsWith("/admin") ||
-    pathname.startsWith("/notifications");
+    pathname.startsWith("/notifications") ||
+    isPaymentSuccessRoute;
 
   // 1. If logged-in user visits /login or /register, redirect to their role home
   if (isAuthRoute && userRole) {
