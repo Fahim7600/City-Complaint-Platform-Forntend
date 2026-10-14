@@ -13,7 +13,7 @@ import {
 import { ComplaintStatus } from "@/types/complaint";
 import { cn } from "@/lib/utils";
 
-interface ProgressStepperProps {
+export interface ProgressStepperProps {
   status: ComplaintStatus;
 }
 

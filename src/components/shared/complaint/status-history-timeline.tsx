@@ -17,7 +17,7 @@ import { formatRelativeTime } from "@/lib/format-date";
 import { ComplaintStatus, type Complaint } from "@/types/complaint";
 import { cn } from "@/lib/utils";
 
-interface StatusHistoryTimelineProps {
+export interface StatusHistoryTimelineProps {
   complaint: Complaint;
 }
 
@@ -41,14 +41,14 @@ export function StatusHistoryTimeline({
     list.push({
       id: "event-created",
       title: "Complaint Filed",
-      actor: complaint.citizen?.name || "Citizen (You)",
+      actor: complaint.citizen?.name || "Citizen (Filer)",
       date: complaint.createdAt,
       note: "Ticket logged on city registry with initial PENDING status.",
       icon: FileCheck2,
       colorClass: "bg-blue-500 text-white",
     });
 
-    // 2. Escalation if happened before resolution
+    // 2. Escalation if happened
     if (complaint.escalatedAt) {
       list.push({
         id: "event-escalated",
@@ -67,7 +67,7 @@ export function StatusHistoryTimeline({
         id: "event-assigned",
         title: "Technician Dispatched",
         actor: complaint.department?.name || "Municipal Department Manager",
-        date: complaint.createdAt, // approximate sequence
+        date: complaint.createdAt,
         note: `Assigned to field technician for inspection.`,
         icon: UserCheck,
         colorClass: "bg-blue-600 text-white",
@@ -98,26 +98,39 @@ export function StatusHistoryTimeline({
         title: "Work Marked Resolved",
         actor: complaint.assignedTechnician?.name || "Field Technician",
         date: complaint.resolvedAt,
-        note: "Defect repaired. Citizen review and 7-day reopen window activated.",
+        note: "Defect repaired. Citizen review and verification window activated.",
         icon: CheckCircle2,
         colorClass: "bg-emerald-500 text-white",
       });
     }
 
-    // 6. Reopened
+    // 6. Reopened / Sent back
     if (complaint.reopenedAt) {
       list.push({
         id: "event-reopened",
         title: `Complaint Reopened (${complaint.reopenCount}x)`,
-        actor: complaint.citizen?.name || "Citizen",
+        actor: complaint.citizen?.name || "Citizen / Manager",
         date: complaint.reopenedAt,
-        note: "Reopened by citizen due to incomplete resolution.",
+        note: "Reopened for additional technician remediation.",
         icon: RotateCcw,
         colorClass: "bg-amber-500 text-white",
       });
     }
 
-    // 7. Cancelled
+    // 7. Closed
+    if (complaint.status === ComplaintStatus.CLOSED) {
+      list.push({
+        id: "event-closed",
+        title: "Complaint Closed",
+        actor: "Department Manager / System",
+        date: complaint.updatedAt,
+        note: "Resolution finalized and archived.",
+        icon: CheckCircle2,
+        colorClass: "bg-teal-600 text-white",
+      });
+    }
+
+    // 8. Cancelled
     if (complaint.status === ComplaintStatus.CANCELLED) {
       list.push({
         id: "event-cancelled",
@@ -130,7 +143,7 @@ export function StatusHistoryTimeline({
       });
     }
 
-    // 8. Rejected
+    // 9. Rejected
     if (complaint.status === ComplaintStatus.REJECTED) {
       list.push({
         id: "event-rejected",

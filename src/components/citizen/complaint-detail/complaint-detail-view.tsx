@@ -21,10 +21,12 @@ import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { PageSkeleton } from "@/components/shared/skeletons";
 import { SlaCountdownCard } from "./sla-countdown-card";
-import { ProgressStepper } from "./progress-stepper";
-import { AttachmentsGallery } from "./attachments-gallery";
-import { StatusHistoryTimeline } from "./status-history-timeline";
 import { AssignedTechnicianCard } from "./assigned-technician-card";
+import {
+  ProgressStepper,
+  AttachmentsGallery,
+  StatusHistoryTimeline,
+} from "@/components/shared/complaint";
 import { CancelComplaintAction } from "@/components/citizen/cancel";
 import { ReopenComplaintDialog } from "@/components/citizen/reopen";
 import { ComplaintReviewSection } from "@/components/citizen/review";

@@ -31,9 +31,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { QueueSlaChip } from "./queue-sla-chip";
-import { ProgressStepper } from "@/components/citizen/complaint-detail/progress-stepper";
-import { AttachmentsGallery } from "@/components/citizen/complaint-detail/attachments-gallery";
-import { StatusHistoryTimeline } from "@/components/citizen/complaint-detail/status-history-timeline";
+import {
+  ProgressStepper,
+  AttachmentsGallery,
+  StatusHistoryTimeline,
+} from "@/components/shared/complaint";
 import { AssignTechnicianDialog } from "./assign-technician-dialog";
 import { EscalateDialog } from "./escalate-dialog";
 import { TriagePriorityDialog } from "./triage-priority-dialog";
