@@ -4,3 +4,8 @@ export * from "./jobs-stats";
 export * from "./jobs-filters";
 export * from "./job-card";
 export * from "./jobs-view";
+export * from "./job-detail-header";
+export * from "./citizen-report-card";
+export * from "./photo-uploader";
+export * from "./work-update-panel";
+export * from "./job-detail-view";
