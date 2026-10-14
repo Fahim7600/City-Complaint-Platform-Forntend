@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { ProfileView } from "@/components/citizen/profile";
+import { ProfileView } from "@/components/shared/profile";
 import { PageSkeleton } from "@/components/shared/skeletons";
 
 export const metadata: Metadata = {

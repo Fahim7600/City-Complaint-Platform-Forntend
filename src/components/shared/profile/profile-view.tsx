@@ -11,7 +11,15 @@ import { useUrlState } from "@/hooks/use-url-state";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
-export function ProfileView() {
+interface ProfileViewProps {
+  title?: string;
+  description?: string;
+}
+
+export function ProfileView({
+  title = "Profile & Settings",
+  description,
+}: ProfileViewProps) {
   const { user, isLoading } = useAuth();
   const { getParam, setParam } = useUrlState();
 
@@ -25,11 +33,21 @@ export function ProfileView() {
     return <PageSkeleton hasStats={false} />;
   }
 
+  const roleDescription =
+    description ||
+    (user.role === "CITIZEN"
+      ? "Manage your citizen account details, contact information, and security preferences."
+      : user.role === "MANAGER"
+      ? "Manage your municipal department manager credentials and authentication security."
+      : user.role === "TECHNICIAN"
+      ? "Manage your field technician account settings, contact information, and security."
+      : "Manage your administrative platform credentials and system security.");
+
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-16">
       <PageHeader
-        title="Profile & Settings"
-        description="Manage your citizen account details, contact information, and security preferences."
+        title={title}
+        description={roleDescription}
       />
 
       {/* Tabs Header synced to URL */}

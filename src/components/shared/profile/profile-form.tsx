@@ -46,7 +46,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
   const watchedAvatarUrl = watch("avatarUrl");
   const displayAvatar = watchedAvatarUrl || user.avatarUrl || undefined;
 
-  const initials = (user.name || "Citizen")
+  const initials = (user.name || user.role || "User")
     .split(" ")
     .map((n) => n[0])
     .join("")
@@ -94,7 +94,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
               {user.name}
             </h3>
             <p className="text-xs text-muted-foreground">
-              {user.email} • Citizen Account
+              {user.email} • {user.role} Account
             </p>
           </div>
         </div>
