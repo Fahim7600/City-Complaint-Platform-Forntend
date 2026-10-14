@@ -62,7 +62,7 @@ function getNotificationHref(
     case "ADMIN":
       return `/admin/complaints/${id}`;
     case "TECHNICIAN":
-      return `/technician?id=${id}`;
+      return `/technician/jobs/${id}`;
     case "MANAGER":
       return `/manager?id=${id}`;
     default:

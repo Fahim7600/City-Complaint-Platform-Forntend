@@ -1,15 +1,17 @@
 "use client";
 
 import * as React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   AlertCircle,
   AlertTriangle,
   ArrowUpRight,
+  CheckCircle2,
   Copy,
   Flame,
   Loader2,
   MapPin,
+  RotateCcw,
   UserCheck,
   UserX,
   Wrench,
@@ -27,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StatusBadge } from "@/components/shared/status-badge";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { QueueSlaChip } from "./queue-sla-chip";
 import { ProgressStepper } from "@/components/citizen/complaint-detail/progress-stepper";
 import { AttachmentsGallery } from "@/components/citizen/complaint-detail/attachments-gallery";
@@ -35,10 +38,14 @@ import { AssignTechnicianDialog } from "./assign-technician-dialog";
 import { EscalateDialog } from "./escalate-dialog";
 import { TriagePriorityDialog } from "./triage-priority-dialog";
 import { RejectComplaintDialog } from "./reject-complaint-dialog";
+import { SendBackDialog } from "./send-back-dialog";
 import { complaintService } from "@/services/complaint.service";
 import { queryKeys } from "@/lib/query-keys";
 import { formatDate } from "@/lib/format-date";
-import { ComplaintStatus } from "@/types/complaint";
+import { getErrorMessage } from "@/lib/axios";
+import { useAuth } from "@/hooks/use-auth";
+import { ComplaintStatus, type Complaint } from "@/types/complaint";
+import type { PaginatedData } from "@/types/api";
 
 interface ComplaintSheetProps {
   complaintId: string | null;
@@ -51,11 +58,17 @@ export function ComplaintSheet({
   open,
   onOpenChange,
 }: ComplaintSheetProps) {
+  const queryClient = useQueryClient();
+  const { role } = useAuth();
+  const isAdmin = role === "ADMIN";
+
   const [assignOpen, setAssignOpen] = React.useState(false);
   const [isReassign, setIsReassign] = React.useState(false);
   const [escalateOpen, setEscalateOpen] = React.useState(false);
   const [triageOpen, setTriageOpen] = React.useState(false);
   const [rejectOpen, setRejectOpen] = React.useState(false);
+  const [sendBackOpen, setSendBackOpen] = React.useState(false);
+  const [closeConfirmOpen, setCloseConfirmOpen] = React.useState(false);
 
   // Fetch full complaint detail
   const {
@@ -75,6 +88,90 @@ export function ComplaintSheet({
     enabled: open && Boolean(complaintId),
   });
 
+  // Close complaint mutation (RESOLVED -> CLOSED) with optimistic update
+  const closeMutation = useMutation({
+    mutationFn: () =>
+      complaintService.updateStatus(complaintId!, {
+        status: ComplaintStatus.CLOSED,
+      }),
+    onMutate: async () => {
+      if (!complaintId) return;
+      await queryClient.cancelQueries({
+        queryKey: queryKeys.complaints.detail(complaintId),
+      });
+      await queryClient.cancelQueries({
+        queryKey: queryKeys.complaints.all,
+      });
+
+      const previousDetail = queryClient.getQueryData<Complaint>(
+        queryKeys.complaints.detail(complaintId)
+      );
+
+      if (previousDetail) {
+        queryClient.setQueryData<Complaint>(
+          queryKeys.complaints.detail(complaintId),
+          {
+            ...previousDetail,
+            status: ComplaintStatus.CLOSED,
+          }
+        );
+      }
+
+      queryClient.setQueriesData<PaginatedData<Complaint>>(
+        { queryKey: queryKeys.complaints.all },
+        (old) => {
+          if (!old || !old.items) return old;
+          return {
+            ...old,
+            items: old.items.map((item) =>
+              item.id === complaintId
+                ? { ...item, status: ComplaintStatus.CLOSED }
+                : item
+            ),
+          };
+        }
+      );
+
+      return { previousDetail };
+    },
+    onError: (err, _val, context) => {
+      if (complaintId && context?.previousDetail) {
+        queryClient.setQueryData(
+          queryKeys.complaints.detail(complaintId),
+          context.previousDetail
+        );
+      }
+      queryClient.invalidateQueries({ queryKey: queryKeys.complaints.all });
+      toast.error(getErrorMessage(err) || "Failed to close complaint.");
+    },
+    onSuccess: () => {
+      toast.success("Complaint closed");
+      setCloseConfirmOpen(false);
+    },
+    onSettled: () => {
+      if (complaintId) {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.complaints.detail(complaintId),
+        });
+      }
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.complaints.all,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.departments.all,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.public.all,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.technicians.all,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.notifications.all,
+      });
+    },
+  });
+
   const handleCopyId = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!complaint) return;
@@ -91,6 +188,7 @@ export function ComplaintSheet({
   const isAssignedOrActive =
     complaint?.status === ComplaintStatus.ASSIGNED ||
     complaint?.status === ComplaintStatus.IN_PROGRESS;
+  const isResolved = complaint?.status === ComplaintStatus.RESOLVED;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -216,8 +314,8 @@ export function ComplaintSheet({
                   </Button>
                 )}
 
-                {/* 2. Reassign Technician (Already ASSIGNED or IN_PROGRESS) */}
-                {isAssignedOrActive && (
+                {/* 2. Reassign Technician (ADMIN only: Already ASSIGNED or IN_PROGRESS) */}
+                {isAssignedOrActive && isAdmin && (
                   <Button
                     variant="outline"
                     size="sm"
@@ -232,7 +330,33 @@ export function ComplaintSheet({
                   </Button>
                 )}
 
-                {/* 3. Re-triage Priority (Non-terminal) */}
+                {/* 3. Actions on RESOLVED complaints (Managers & Admins) */}
+                {isResolved && (
+                  <>
+                    {/* Close complaint (RESOLVED -> CLOSED): teal button */}
+                    <Button
+                      size="sm"
+                      onClick={() => setCloseConfirmOpen(true)}
+                      className="text-xs font-semibold bg-teal-600 hover:bg-teal-500 text-white shadow-sm shadow-teal-500/25"
+                    >
+                      <CheckCircle2 className="size-3.5 mr-1.5" />
+                      Close complaint
+                    </Button>
+
+                    {/* Send back to technician (RESOLVED -> IN_PROGRESS): outline button */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSendBackOpen(true)}
+                      className="text-xs font-semibold border-border hover:bg-muted text-foreground"
+                    >
+                      <RotateCcw className="size-3.5 mr-1.5 text-amber-500" />
+                      Send back to technician
+                    </Button>
+                  </>
+                )}
+
+                {/* 4. Re-triage Priority (Non-terminal) */}
                 {!isTerminal && (
                   <Button
                     variant="outline"
@@ -245,7 +369,7 @@ export function ComplaintSheet({
                   </Button>
                 )}
 
-                {/* 4. Escalate to Admin (Non-terminal & not already escalated) */}
+                {/* 5. Escalate to Admin (Non-terminal & not already escalated) */}
                 {!isTerminal && !complaint.isEscalated && (
                   <Button
                     variant="outline"
@@ -258,7 +382,7 @@ export function ComplaintSheet({
                   </Button>
                 )}
 
-                {/* 5. Reject Ticket (PENDING only) */}
+                {/* 6. Reject Ticket (PENDING only) */}
                 {isPending && (
                   <Button
                     variant="destructive"
@@ -397,6 +521,25 @@ export function ComplaintSheet({
               open={rejectOpen}
               onOpenChange={setRejectOpen}
               complaint={complaint}
+            />
+
+            <SendBackDialog
+              open={sendBackOpen}
+              onOpenChange={setSendBackOpen}
+              complaint={complaint}
+            />
+
+            <ConfirmDialog
+              open={closeConfirmOpen}
+              onOpenChange={setCloseConfirmOpen}
+              title="Close Complaint Ticket"
+              description="Are you sure you want to mark this complaint as permanently closed? This confirms work is complete and finalized. The citizen will be notified."
+              confirmText="Close complaint"
+              variant="default"
+              onConfirm={async () => {
+                await closeMutation.mutateAsync();
+              }}
+              isLoading={closeMutation.isPending}
             />
           </>
         )}

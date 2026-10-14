@@ -8,6 +8,7 @@ export * from "./assign-technician-dialog";
 export * from "./escalate-dialog";
 export * from "./triage-priority-dialog";
 export * from "./reject-complaint-dialog";
+export * from "./send-back-dialog";
 export * from "./team-card";
 export * from "./team-sheet";
 export * from "./team-view";
