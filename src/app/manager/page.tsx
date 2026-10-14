@@ -1,18 +1,17 @@
-// TEMP: Department Manager Portal Page (to be replaced in later prompts)
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { TempRoleDashboard } from "@/components/auth/temp-role-dashboard";
+import { QueueView } from "@/components/manager";
 import { PageSkeleton } from "@/components/shared/skeletons";
 
 export const metadata: Metadata = {
-  title: "Department Manager Portal",
-  description: "Manager portal for complaint dispatching, triage, and SLA enforcement.",
+  title: "Department Queue",
+  description: "Monitor and triage your department complaints queue, assign field technicians, and track SLA countdowns.",
 };
 
-export default function ManagerPage() {
+export default function ManagerQueuePage() {
   return (
     <Suspense fallback={<PageSkeleton />}>
-      <TempRoleDashboard expectedRole="MANAGER" title="Department Manager Portal" />
+      <QueueView />
     </Suspense>
   );
 }
