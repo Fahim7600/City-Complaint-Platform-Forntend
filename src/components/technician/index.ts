@@ -9,3 +9,6 @@ export * from "./citizen-report-card";
 export * from "./photo-uploader";
 export * from "./work-update-panel";
 export * from "./job-detail-view";
+export * from "./performance-stats";
+export * from "./performance-charts";
+export * from "./performance-view";
