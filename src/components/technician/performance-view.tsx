@@ -3,14 +3,14 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
-import { Award, Calendar, Loader2, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { PerformanceStats } from "./performance-stats";
 import { PerformanceChartsSkeleton } from "./performance-charts";
 import { EmptyState } from "@/components/shared/empty-state";
 import { technicianService } from "@/services/technician.service";
 import { queryKeys } from "@/lib/query-keys";
 import { useUrlState } from "@/hooks/use-url-state";
-import { ComplaintStatus, type Complaint } from "@/types/complaint";
+import { ComplaintStatus } from "@/types/complaint";
 import { cn } from "@/lib/utils";
 
 // Code splitting: dynamically load Recharts on client side only
@@ -41,7 +41,7 @@ export function PerformanceView() {
     queryFn: () => technicianService.getMyAssignedJobs({ limit: 50 }),
   });
 
-  const jobs = jobsData?.items || [];
+  const jobs = React.useMemo(() => jobsData?.items || [], [jobsData?.items]);
 
   const handleRangeChange = (range: "30d" | "90d" | "all") => {
     setParam("range", range === "30d" ? null : range);

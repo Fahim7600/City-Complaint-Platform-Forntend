@@ -3,8 +3,6 @@
 import * as React from "react";
 import {
   CheckCircle2,
-  Clock,
-  Flame,
   Percent,
   Star,
   Timer,

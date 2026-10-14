@@ -3,7 +3,7 @@
 import * as React from "react";
 import { notFound } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { CheckCircle2, Loader2, Play } from "lucide-react";
+import { CheckCircle2, Play } from "lucide-react";
 import { JobDetailHeader } from "./job-detail-header";
 import { CitizenReportCard } from "./citizen-report-card";
 import { PhotoUploader } from "./photo-uploader";

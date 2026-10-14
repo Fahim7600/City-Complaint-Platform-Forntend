@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
@@ -9,11 +8,9 @@ import {
   Copy,
   Crown,
   ExternalLink,
-  Flame,
   Loader2,
   MapPin,
   Play,
-  Wrench,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";

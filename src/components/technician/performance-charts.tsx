@@ -8,7 +8,6 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
-  Legend,
   Pie,
   PieChart,
   ResponsiveContainer,
@@ -18,7 +17,7 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Award, BarChart3, PieChartIcon, TrendingUp } from "lucide-react";
+import { Award, PieChartIcon, TrendingUp } from "lucide-react";
 
 export interface TimeSeriesPoint {
   label: string;

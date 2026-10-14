@@ -52,7 +52,10 @@ export function JobsView() {
     queryFn: () => technicianService.getMyAssignedJobs({ limit: 50 }),
   });
 
-  const allJobs: Complaint[] = jobsData?.items || [];
+  const allJobs: Complaint[] = React.useMemo(
+    () => jobsData?.items || [],
+    [jobsData?.items]
+  );
 
   // Tab counts
   const counts = React.useMemo(() => {

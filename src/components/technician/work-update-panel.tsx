@@ -6,14 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  AlertCircle,
   CheckCircle2,
   Clock,
-  HelpCircle,
   Loader2,
   MessageSquare,
   Play,
-  Sparkles,
   Star,
   Wrench,
 } from "lucide-react";
@@ -147,7 +144,7 @@ export function WorkUpdatePanel({
         status: ComplaintStatus.RESOLVED,
         note: data.note.trim(),
       }),
-    onMutate: async (data: ResolveFormData) => {
+    onMutate: async () => {
       await queryClient.cancelQueries({
         queryKey: queryKeys.complaints.detail(complaint.id),
       });

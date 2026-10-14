@@ -12,3 +12,5 @@ export * from "./job-detail-view";
 export * from "./performance-stats";
 export * from "./performance-charts";
 export * from "./performance-view";
+export * from "./availability-card";
+export * from "./profile-view";

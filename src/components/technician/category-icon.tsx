@@ -1,8 +1,6 @@
-import * as React from "react";
 import {
   Car,
   Droplets,
-  HelpCircle,
   Lightbulb,
   ShieldAlert,
   Trash2,

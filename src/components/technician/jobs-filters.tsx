@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Filter, RotateCcw, SlidersHorizontal, Sparkles } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/shared/search-input";
 import { FilterSelect } from "@/components/shared/filter-select";

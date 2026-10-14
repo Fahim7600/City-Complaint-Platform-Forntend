@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { CheckCircle2, Clock, Inbox, Star, Wrench } from "lucide-react";
+import { CheckCircle2, Inbox, Star, Wrench } from "lucide-react";
 import { StatCard } from "@/components/shared/stat-card";
 import type { TechnicianPerformance } from "@/types/stats";
 

@@ -16,7 +16,6 @@ import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { AttachmentType, type Attachment } from "@/types/complaint";
-import { cn } from "@/lib/utils";
 
 export interface AttachmentsGalleryProps {
   attachments: Attachment[];
