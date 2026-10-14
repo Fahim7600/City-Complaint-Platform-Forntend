@@ -74,12 +74,29 @@ export interface AdminPremiumPricing {
   active: boolean;
 }
 
+export interface SubscriptionResponse {
+  subscription: Subscription | null;
+  isPremium: boolean;
+}
+
 export interface CheckoutSessionResult {
-  checkoutUrl: string;
+  url: string;
+  checkoutUrl?: string;
 }
 
 export interface ConfirmSessionInput {
   sessionId: string;
+}
+
+export interface ConfirmSessionResult {
+  synced: boolean;
+  sessionStatus: string | null;
+  paymentStatus: string;
+}
+
+export interface CancelSubscriptionResult {
+  message: string;
+  currentPeriodEnd: string | null;
 }
 
 export interface ListPaymentsQuery {

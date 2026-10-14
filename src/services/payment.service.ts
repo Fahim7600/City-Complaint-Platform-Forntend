@@ -1,10 +1,12 @@
 import apiClient from "@/lib/axios";
 import type { ApiResponse } from "@/types/api";
 import type {
+  CancelSubscriptionResult,
   CheckoutSessionResult,
   ConfirmSessionInput,
+  ConfirmSessionResult,
   Payment,
-  Subscription,
+  SubscriptionResponse,
 } from "@/types/payment";
 
 export const paymentService = {
@@ -16,24 +18,28 @@ export const paymentService = {
     const res = await apiClient.post<ApiResponse<CheckoutSessionResult>>(
       "/payments/checkout-session"
     );
-    return res.data.data!;
+    const data = res.data.data;
+    return {
+      url: data?.url || data?.checkoutUrl || "",
+      checkoutUrl: data?.url || data?.checkoutUrl || "",
+    };
   },
 
   /**
    * Get the authenticated user's current subscription status and period end.
    */
-  async getMySubscription(): Promise<Subscription | null> {
-    const res = await apiClient.get<ApiResponse<Subscription | null>>(
+  async getMySubscription(): Promise<SubscriptionResponse> {
+    const res = await apiClient.get<ApiResponse<SubscriptionResponse>>(
       "/payments/subscription"
     );
-    return res.data.data ?? null;
+    return res.data.data || { subscription: null, isPremium: false };
   },
 
   /**
    * Schedule subscription cancellation at the end of the current billing period.
    */
-  async cancelSubscription(): Promise<Subscription> {
-    const res = await apiClient.post<ApiResponse<Subscription>>(
+  async cancelSubscription(): Promise<CancelSubscriptionResult> {
+    const res = await apiClient.post<ApiResponse<CancelSubscriptionResult>>(
       "/payments/cancel"
     );
     return res.data.data!;
@@ -44,10 +50,11 @@ export const paymentService = {
    */
   async confirmSession(
     data: ConfirmSessionInput
-  ): Promise<{ status: string; subscription?: Subscription }> {
-    const res = await apiClient.post<
-      ApiResponse<{ status: string; subscription?: Subscription }>
-    >("/payments/confirm-session", data);
+  ): Promise<ConfirmSessionResult> {
+    const res = await apiClient.post<ApiResponse<ConfirmSessionResult>>(
+      "/payments/confirm-session",
+      data
+    );
     return res.data.data!;
   },
 
