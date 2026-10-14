@@ -1,18 +1,17 @@
-// TEMP: Technician Portal Page (to be replaced in later prompts)
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { TempRoleDashboard } from "@/components/auth/temp-role-dashboard";
+import { JobsView } from "@/components/technician/jobs-view";
 import { PageSkeleton } from "@/components/shared/skeletons";
 
 export const metadata: Metadata = {
-  title: "Technician Portal",
-  description: "Technician portal for assigned work orders and service resolutions.",
+  title: "My Assigned Jobs",
+  description: "View and manage assigned civic service work orders and maintenance dispatches.",
 };
 
 export default function TechnicianPage() {
   return (
     <Suspense fallback={<PageSkeleton />}>
-      <TempRoleDashboard expectedRole="TECHNICIAN" title="Technician Portal" />
+      <JobsView />
     </Suspense>
   );
 }
