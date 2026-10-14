@@ -3,10 +3,9 @@
 import * as React from "react";
 import {
   ArrowUpCircle,
+  CalendarCheck,
   CheckCircle2,
-  Crown,
-  FileSpreadsheet,
-  Headphones,
+  FileCheck2,
   Image as ImageIcon,
   Sparkles,
   Zap,
@@ -14,62 +13,48 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-export interface BenefitItem {
+export interface EnforcedBenefitItem {
   id: string;
   title: string;
   description: string;
   icon: React.ElementType;
 }
 
-export const PREMIUM_BENEFIT_LIST: BenefitItem[] = [
+export const BACKEND_ENFORCED_BENEFITS: EnforcedBenefitItem[] = [
   {
     id: "priority",
-    title: "Automatic HIGH Priority Triage",
+    title: "Automatic HIGH Priority on Every Complaint",
     description:
-      "All your complaint filings automatically skip standard review and receive High priority dispatch status.",
+      "All new complaint tickets are automatically assigned High priority upon filing for immediate municipal triage.",
     icon: Zap,
   },
   {
-    id: "quota",
-    title: "Expanded Complaint Limit (20/mo)",
+    id: "complaint-limit",
+    title: "Higher Monthly Complaint Limit (20/month)",
     description:
-      "Submit up to 20 municipal reports each month (increased from the 5 reports/month free citizen limit).",
+      "Submit up to 20 civic complaint filings every calendar month (increased from the 5 complaints/month standard limit).",
     icon: ArrowUpCircle,
   },
   {
-    id: "attachments",
-    title: "Enhanced Photo Evidence (10 Uploads)",
+    id: "attachments-limit",
+    title: "Expanded Evidence Uploads (10 Files/Upload)",
     description:
-      "Attach up to 10 high-resolution photos and work documents per ticket (compared to 5 on the standard tier).",
+      "Attach up to 10 photos and documentation files per upload (increased from the 5 files free tier limit).",
     icon: ImageIcon,
   },
   {
-    id: "reports",
-    title: "Monthly Municipal Resolution Audit",
+    id: "queue-sorting",
+    title: "Staff Complaint Queues Sorted by High Priority",
     description:
-      "Receive automated monthly performance breakdowns of city actions taken across your submitted reports.",
-    icon: FileSpreadsheet,
+      "Department managers and field technicians see your filings at the top of their assignment queues.",
+    icon: FileCheck2,
   },
   {
-    id: "support",
-    title: "Priority Civic Support Desk",
+    id: "cancellation-flexibility",
+    title: "Cancel Anytime with Retained Period Access",
     description:
-      "Access expedited inquiry response channels from municipal dispatch staff and ticket managers.",
-    icon: Headphones,
-  },
-  {
-    id: "badge",
-    title: "Verified Citizen PRO Badge",
-    description:
-      "Showcase your civic contribution with a gold verified status badge displayed on your dashboard and profile.",
-    icon: Crown,
-  },
-  {
-    id: "early-access",
-    title: "Early Access to Civic Pilot Programs",
-    description:
-      "Participate in early municipal tests, civic beta tools, and upcoming public service features first.",
-    icon: Sparkles,
+      "Cancel at any point without penalty; your premium privileges remain active until the end of your billing cycle.",
+    icon: CalendarCheck,
   },
 ];
 
@@ -80,7 +65,7 @@ interface BenefitsChecklistProps {
 
 export function BenefitsChecklist({
   className,
-  title = "Premium Citizen Privileges",
+  title = "Backend-Enforced Premium Privileges",
 }: BenefitsChecklistProps) {
   return (
     <Card className={cn("border border-border/70 bg-card/60 backdrop-blur-sm", className)}>
@@ -93,12 +78,12 @@ export function BenefitsChecklist({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
-          {PREMIUM_BENEFIT_LIST.map((benefit) => {
+          {BACKEND_ENFORCED_BENEFITS.map((benefit) => {
             const Icon = benefit.icon;
             return (
               <div
                 key={benefit.id}
-                className="flex items-start gap-3 p-3 rounded-xl bg-background/50 border border-border/50 transition-all hover:border-violet-500/40"
+                className="flex items-start gap-3 p-3.5 rounded-xl bg-background/50 border border-border/50 transition-all hover:border-violet-500/40"
               >
                 <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/20">
                   <Icon className="size-4" />

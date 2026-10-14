@@ -23,7 +23,7 @@ import {
   SubscriptionStatus,
   type Subscription,
 } from "@/types/payment";
-import { PREMIUM_BENEFIT_LIST } from "./benefits-checklist";
+import { BACKEND_ENFORCED_BENEFITS } from "./benefits-checklist";
 
 interface SubscriptionStatusCardProps {
   subscription: Subscription | null;
@@ -183,7 +183,7 @@ export function SubscriptionStatusCard({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-            {PREMIUM_BENEFIT_LIST.map((benefit) => (
+            {BACKEND_ENFORCED_BENEFITS.map((benefit) => (
               <div
                 key={benefit.id}
                 className="flex items-start gap-2.5 p-3 rounded-xl bg-background/40 border border-border/50 text-xs"

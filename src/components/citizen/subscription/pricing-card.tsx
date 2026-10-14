@@ -1,206 +1,124 @@
 "use client";
 
 import * as React from "react";
-import { Check, Crown, Sparkles } from "lucide-react";
+import { Check, Crown, Sparkles, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { PublicPremiumInfo } from "@/types/payment";
-import { cn } from "@/lib/utils";
 
 interface PricingCardProps {
   premiumInfo?: PublicPremiumInfo | null;
-  selectedPlan: "month" | "year";
-  onSelectPlan: (plan: "month" | "year") => void;
 }
 
-export function PricingCard({
-  premiumInfo,
-  selectedPlan,
-  onSelectPlan,
-}: PricingCardProps) {
-  // Use exact backend price or sensible defaults if Stripe price lookup is null
-  const baseAmount = premiumInfo?.price?.amount ?? 9.99;
-  const currencyCode = (premiumInfo?.price?.currency || "usd").toUpperCase();
+export function PricingCard({ premiumInfo }: PricingCardProps) {
+  // Backend returns converted amount in standard units: amount: (stripePrice.unit_amount || 0) / 100
+  const price = premiumInfo?.price;
+  const amount = price?.amount ?? 9.99;
+  const currency = price?.currency || "usd";
+  const interval = price?.interval;
 
-  const formatCurrency = (amt: number) => {
+  const formattedPrice = React.useMemo(() => {
     try {
       return new Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: currencyCode,
-        minimumFractionDigits: 2,
-      }).format(amt);
+        currency: currency.toUpperCase(),
+        minimumFractionDigits: amount % 1 === 0 ? 0 : 2,
+        maximumFractionDigits: 2,
+      }).format(amount);
     } catch {
-      return `$${amt.toFixed(2)}`;
+      return `${currency.toUpperCase()} ${amount.toFixed(2)}`;
     }
-  };
+  }, [amount, currency]);
 
-  // Yearly calculation: 20% discount (approx 10 months for 12 months)
-  const yearlyTotal = baseAmount * 12 * 0.8;
-  const yearlyPerMonth = yearlyTotal / 12;
+  const billingIntervalLabel = interval ? `/ ${interval}` : "one-time payment";
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h3 className="font-heading text-lg font-bold text-foreground">
-            Select Your Subscription Plan
-          </h3>
-          <p className="text-xs text-muted-foreground">
-            Choose how you would like to be billed for your CityFix verified citizen privileges.
-          </p>
-        </div>
-
-        {/* Plan Interval Switcher */}
-        <div className="inline-flex items-center p-1 rounded-xl bg-muted/60 border border-border/80 self-start sm:self-auto">
-          <button
-            type="button"
-            onClick={() => onSelectPlan("month")}
-            className={cn(
-              "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200",
-              selectedPlan === "month"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            Monthly
-          </button>
-          <button
-            type="button"
-            onClick={() => onSelectPlan("year")}
-            className={cn(
-              "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5",
-              selectedPlan === "year"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            <span>Annual</span>
-            <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-              Save 20%
-            </span>
-          </button>
-        </div>
+      <div>
+        <h3 className="font-heading text-lg font-bold text-foreground">
+          Premium Membership Plan
+        </h3>
+        <p className="text-xs text-muted-foreground">
+          Single transparent subscription directly synchronized with municipal operations.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Monthly Plan Card */}
-        <div
-          onClick={() => onSelectPlan("month")}
-          className={cn(
-            "relative p-5 rounded-2xl border bg-card/70 backdrop-blur-sm cursor-pointer transition-all duration-300 flex flex-col justify-between gap-4",
-            selectedPlan === "month"
-              ? "border-violet-500 ring-2 ring-violet-500/40 shadow-[0_0_25px_rgba(168,85,247,0.25)] bg-gradient-to-b from-violet-500/5 to-card/90"
-              : "border-border/70 hover:border-violet-500/40 hover:shadow-md"
-          )}
-        >
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="flex size-8 items-center justify-center rounded-lg bg-violet-500/10 text-violet-500 border border-violet-500/20">
-                  <Sparkles className="size-4" />
-                </div>
-                <div>
-                  <h4 className="font-heading text-sm font-bold text-foreground">
-                    Monthly Citizen
-                  </h4>
-                  <span className="text-[10px] text-muted-foreground">
-                    Flexible month-to-month billing
-                  </span>
-                </div>
-              </div>
-              {selectedPlan === "month" && (
-                <Badge className="bg-violet-600 text-white border-0 text-[10px] font-semibold">
-                  Selected
-                </Badge>
-              )}
+      {/* Single Real Plan Card with glowing violet neon border */}
+      <div className="relative p-6 sm:p-7 rounded-2xl border border-violet-500 ring-2 ring-violet-500/40 shadow-[0_0_30px_rgba(168,85,247,0.22)] bg-gradient-to-b from-violet-500/10 via-background to-card/90 backdrop-blur-sm space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border/50">
+          <div className="flex items-center gap-3">
+            <div className="flex size-11 items-center justify-center rounded-xl bg-violet-500/15 text-violet-500 border border-violet-500/30 shadow-[0_0_15px_rgba(168,85,247,0.25)]">
+              <Crown className="size-6 fill-violet-500" />
             </div>
-
-            <div className="pt-2">
-              <div className="flex items-baseline gap-1">
-                <span className="font-heading text-3xl font-extrabold text-foreground">
-                  {formatCurrency(baseAmount)}
-                </span>
-                <span className="text-xs text-muted-foreground font-medium">
-                  / month
-                </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="font-heading text-base sm:text-lg font-extrabold text-foreground">
+                  Citizen PRO Tier
+                </h4>
+                <Badge className="bg-violet-600 text-white border-0 text-[10px] font-bold">
+                  Official Tier
+                </Badge>
               </div>
-              <p className="text-[11px] text-muted-foreground mt-1">
-                Billed monthly. Cancel anytime without penalty.
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Full municipal priority response and heightened monthly capacity
               </p>
             </div>
           </div>
 
-          <div className="pt-3 border-t border-border/50 space-y-1.5 text-xs text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Check className="size-3.5 text-emerald-500 shrink-0" />
-              <span>Full 20 reports/month allocation</span>
+          {/* Price Tag */}
+          <div className="text-left sm:text-right">
+            <div className="flex items-baseline gap-1.5 sm:justify-end">
+              <span className="font-heading text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">
+                {formattedPrice}
+              </span>
+              <span className="text-xs font-semibold text-muted-foreground lowercase">
+                {billingIntervalLabel}
+              </span>
             </div>
-            <div className="flex items-center gap-2">
-              <Check className="size-3.5 text-emerald-500 shrink-0" />
-              <span>Automatic High Priority on all tickets</span>
-            </div>
+            <p className="text-[11px] text-muted-foreground mt-0.5">
+              Processed securely via Stripe Billing
+            </p>
           </div>
         </div>
 
-        {/* Annual Plan Card */}
-        <div
-          onClick={() => onSelectPlan("year")}
-          className={cn(
-            "relative p-5 rounded-2xl border bg-card/70 backdrop-blur-sm cursor-pointer transition-all duration-300 flex flex-col justify-between gap-4",
-            selectedPlan === "year"
-              ? "border-violet-500 ring-2 ring-violet-500/40 shadow-[0_0_25px_rgba(168,85,247,0.25)] bg-gradient-to-b from-violet-500/5 to-card/90"
-              : "border-border/70 hover:border-violet-500/40 hover:shadow-md"
-          )}
-        >
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="flex size-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500 border border-amber-500/20">
-                  <Crown className="size-4" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <h4 className="font-heading text-sm font-bold text-foreground">
-                      Annual Champion
-                    </h4>
-                    <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-amber-500/15 text-amber-500 border border-amber-500/30">
-                      Best Value
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-muted-foreground">
-                    12 months of civic resolution
-                  </span>
-                </div>
-              </div>
-              {selectedPlan === "year" && (
-                <Badge className="bg-violet-600 text-white border-0 text-[10px] font-semibold">
-                  Selected
-                </Badge>
-              )}
-            </div>
-
-            <div className="pt-2">
-              <div className="flex items-baseline gap-1">
-                <span className="font-heading text-3xl font-extrabold text-foreground">
-                  {formatCurrency(yearlyPerMonth)}
-                </span>
-                <span className="text-xs text-muted-foreground font-medium">
-                  / month
-                </span>
-              </div>
-              <p className="text-[11px] text-muted-foreground mt-1">
-                Billed as one payment of {formatCurrency(yearlyTotal)} / year (Save 20%).
+        {/* Backend Enforced Highlights */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-background/50 border border-border/50">
+            <Zap className="size-4 text-violet-500 shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <span className="font-bold text-foreground">Automatic High Priority</span>
+              <p className="text-[11px] text-muted-foreground">
+                All complaints auto-flagged High for expedited triage.
               </p>
             </div>
           </div>
 
-          <div className="pt-3 border-t border-border/50 space-y-1.5 text-xs text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Check className="size-3.5 text-emerald-500 shrink-0" />
-              <span>Full 240 reports/year quota pool</span>
+          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-background/50 border border-border/50">
+            <Sparkles className="size-4 text-violet-500 shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <span className="font-bold text-foreground">20 Complaints / Month</span>
+              <p className="text-[11px] text-muted-foreground">
+                4x higher monthly filing capacity (increased from 5).
+              </p>
             </div>
-            <div className="flex items-center gap-2">
-              <Check className="size-3.5 text-emerald-500 shrink-0" />
-              <span>2 Months Free vs monthly billing</span>
+          </div>
+
+          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-background/50 border border-border/50">
+            <Check className="size-4 text-emerald-500 shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <span className="font-bold text-foreground">10 Photo Uploads per Ticket</span>
+              <p className="text-[11px] text-muted-foreground">
+                Enhanced evidence uploads (increased from 5).
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-background/50 border border-border/50">
+            <Check className="size-4 text-emerald-500 shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <span className="font-bold text-foreground">Top-of-Queue Staff Sorting</span>
+              <p className="text-[11px] text-muted-foreground">
+                Technicians and managers see your filings first.
+              </p>
             </div>
           </div>
         </div>

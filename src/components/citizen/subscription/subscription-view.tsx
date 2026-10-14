@@ -18,7 +18,7 @@ import { PageSkeleton } from "@/components/shared/skeletons";
 import { PricingCard } from "./pricing-card";
 import { BenefitsChecklist } from "./benefits-checklist";
 import { SubscriptionStatusCard } from "./subscription-status-card";
-import { PaymentHistoryTable } from "./payment-history-table";
+import { BillingDetailsCard } from "./billing-details-card";
 import { TestModeCard } from "./test-mode-card";
 import { paymentService } from "@/services/payment.service";
 import { publicService } from "@/services/public.service";
@@ -28,7 +28,6 @@ import { SubscriptionStatus } from "@/types/payment";
 import { cn } from "@/lib/utils";
 
 export function SubscriptionView() {
-  const [selectedPlan, setSelectedPlan] = React.useState<"month" | "year">("month");
   const [isRedirecting, setIsRedirecting] = React.useState(false);
 
   // Fetch current user subscription status
@@ -90,7 +89,10 @@ export function SubscriptionView() {
             subscription={subscription}
             isPremium={isPremium}
           />
-          <PaymentHistoryTable />
+          <BillingDetailsCard
+            subscription={subscription}
+            isPremium={isPremium}
+          />
         </div>
       ) : (
         /* STATE A: Free / Not Premium — Upgrade Journey */
@@ -155,14 +157,10 @@ export function SubscriptionView() {
           {/* Test Mode Card for Evaluators */}
           <TestModeCard />
 
-          {/* Plan Selection Cards */}
-          <PricingCard
-            premiumInfo={premiumInfo}
-            selectedPlan={selectedPlan}
-            onSelectPlan={setSelectedPlan}
-          />
+          {/* Single Real Stripe Pricing Card */}
+          <PricingCard premiumInfo={premiumInfo} />
 
-          {/* Benefits Breakdown List */}
+          {/* Enforced Benefits Breakdown List */}
           <BenefitsChecklist />
 
           {/* Bottom Upgrade Bar */}
@@ -172,7 +170,7 @@ export function SubscriptionView() {
                 Ready to become a civic resolution champion?
               </h3>
               <p className="text-xs text-muted-foreground max-w-md mx-auto">
-                Join hundreds of active citizens helping local municipalities detect, prioritize, and repair civic outages faster.
+                Join active citizens helping local municipalities detect, prioritize, and repair civic outages faster.
               </p>
             </div>
 
@@ -195,8 +193,11 @@ export function SubscriptionView() {
             </Button>
           </Card>
 
-          {/* Payment History Section */}
-          <PaymentHistoryTable />
+          {/* Billing & Subscription Details */}
+          <BillingDetailsCard
+            subscription={subscription}
+            isPremium={isPremium}
+          />
         </div>
       )}
     </div>
