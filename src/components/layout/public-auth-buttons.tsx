@@ -18,6 +18,8 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/use-auth";
 import { ROLE_HOME } from "@/lib/roles";
 
+const emptySubscribe = () => () => {};
+
 export function PublicAuthButtons({
   onNavigate,
 }: {
@@ -25,11 +27,11 @@ export function PublicAuthButtons({
 }) {
   const router = useRouter();
   const { user, role, isAuthenticated, isLoading, logout } = useAuth();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = React.useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   const handleLogout = async () => {
     await logout();

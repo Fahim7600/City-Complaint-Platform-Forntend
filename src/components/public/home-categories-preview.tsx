@@ -14,8 +14,6 @@ export function HomeCategoriesPreview({
   departments = [],
   categories = [],
 }: HomeCategoriesPreviewProps) {
-  if (categories.length === 0) return null;
-
   // Group categories by department
   const grouped = React.useMemo(() => {
     const deptMap = new Map<string, { dept: Department; cats: Category[] }>();
@@ -33,6 +31,8 @@ export function HomeCategoriesPreview({
 
     return Array.from(deptMap.values()).filter((item) => item.cats.length > 0);
   }, [departments, categories]);
+
+  if (categories.length === 0 || grouped.length === 0) return null;
 
   return (
     <section className="py-20">

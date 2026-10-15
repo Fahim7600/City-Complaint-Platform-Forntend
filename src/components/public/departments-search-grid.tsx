@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ArrowRight, Clock, FolderTree, Search, Sparkles } from "lucide-react";
+import { ArrowRight, FolderTree, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/shared/search-input";

@@ -1,6 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
-import { ArrowRight, Building2, FolderTree } from "lucide-react";
+import { ArrowRight, FolderTree } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getDepartmentIcon } from "@/components/admin/departments/department-icon-helper";
 import type { Department } from "@/types/department";

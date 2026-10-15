@@ -46,10 +46,16 @@ export const metadata: Metadata = {
       "Citizen grievance reporting, real-time civic service tracking, and community resolution platform for transparent municipal governance.",
     images: [
       {
+        url: "https://images.unsplash.com/photo-1477959858617-67f30bc75b82?q=80&w=1200&auto=format&fit=crop",
+        width: 1200,
+        height: 630,
+        alt: "CityFix Civic Platform Banner",
+      },
+      {
         url: "/stacked-steps-haikei.svg",
         width: 900,
         height: 600,
-        alt: "CityFix Civic Platform Banner",
+        alt: "CityFix Civic Platform Decorative Banner",
       },
     ],
   },
@@ -58,7 +64,9 @@ export const metadata: Metadata = {
     title: "CityFix — City Complaint & Civic Service Platform",
     description:
       "Citizen grievance reporting, real-time civic service tracking, and community resolution platform.",
-    images: ["/stacked-steps-haikei.svg"],
+    images: [
+      "https://images.unsplash.com/photo-1477959858617-67f30bc75b82?q=80&w=1200&auto=format&fit=crop",
+    ],
   },
 };
 

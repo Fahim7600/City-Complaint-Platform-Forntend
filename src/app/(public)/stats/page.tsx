@@ -1,15 +1,12 @@
 import * as React from "react";
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import {
-  BarChart3,
   CheckCircle2,
   Clock,
   FileText,
   Percent,
   RefreshCw,
   Sparkles,
-  TrendingUp,
 } from "lucide-react";
 import { publicServerService } from "@/services/public.server";
 import { siteConfig } from "@/lib/site-config";
@@ -50,15 +47,7 @@ export const metadata: Metadata = {
   },
 };
 
-const StatsCharts = dynamic(
-  () => import("@/components/public/stats-charts").then((mod) => mod.StatsCharts),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-72 rounded-3xl border border-border/60 bg-card/40 animate-pulse" />
-    ),
-  }
-);
+import { StatsChartsWrapper } from "@/components/public/stats-charts-wrapper";
 
 export default async function StatsPage() {
   let stats: PublicStats | null = null;
@@ -135,7 +124,7 @@ export default async function StatsPage() {
 
       {/* 3. Charts Area */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <StatsCharts
+        <StatsChartsWrapper
           countsByStatus={countsByStatus}
           totalComplaints={totalComplaints}
         />

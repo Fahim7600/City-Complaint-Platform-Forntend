@@ -2,18 +2,19 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ArrowRight, Sparkles, ShieldAlert, Check } from "lucide-react";
+import { ArrowRight, Sparkles, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/use-auth";
+
+const emptySubscribe = () => () => {};
 
 export function PricingCtaIsland() {
   const { user, role, isAuthenticated, isLoading } = useAuth();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = React.useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   if (!mounted || isLoading) {
     return (

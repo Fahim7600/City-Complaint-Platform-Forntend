@@ -17,23 +17,21 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(
 ): [React.RefObject<T | null>, boolean] {
   const { threshold = 0.15, rootMargin = "0px", triggerOnce = true } = options;
   const ref = React.useRef<T | null>(null);
-  const [isInView, setIsInView] = React.useState(false);
+  const [isInView, setIsInView] = React.useState(() => {
+    if (typeof window !== "undefined") {
+      return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    }
+    return false;
+  });
 
   React.useEffect(() => {
-    // If user prefers reduced motion, show immediately without animation delay
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      setIsInView(true);
-      return;
-    }
+    if (isInView && triggerOnce) return;
 
     const element = ref.current;
     if (!element) return;
 
     if (typeof IntersectionObserver === "undefined") {
-      setIsInView(true);
+      requestAnimationFrame(() => setIsInView(true));
       return;
     }
 
@@ -56,7 +54,7 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(
     return () => {
       observer.disconnect();
     };
-  }, [threshold, rootMargin, triggerOnce]);
+  }, [threshold, rootMargin, triggerOnce, isInView]);
 
   return [ref, isInView];
 }

@@ -9,7 +9,6 @@ import {
   Wrench,
   UserCheck,
   Crown,
-  Clock,
   ArrowRight,
   Sparkles,
   Award,
@@ -227,7 +226,7 @@ export default async function AboutPage() {
 
           {/* Stepper Cards */}
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4 relative">
-            {lifecycleSteps.map((s, idx) => (
+            {lifecycleSteps.map((s) => (
               <div
                 key={s.step}
                 className="relative p-5 rounded-2xl border border-border/70 bg-card/70 backdrop-blur-sm space-y-3 hover:border-violet-500/40 transition-colors"

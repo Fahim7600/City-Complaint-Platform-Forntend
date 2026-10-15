@@ -16,7 +16,7 @@ import {
 import { EmptyState } from "@/components/shared/empty-state";
 import { BarChart3 } from "lucide-react";
 
-interface StatsChartsProps {
+export interface StatsChartsProps {
   countsByStatus?: Record<string, number>;
   totalComplaints?: number;
 }

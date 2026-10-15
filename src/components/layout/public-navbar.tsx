@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Sparkles, X } from "lucide-react";
+import { Menu, Sparkles } from "lucide-react";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { PublicAuthButtons } from "./public-auth-buttons";
 import { siteConfig } from "@/lib/site-config";

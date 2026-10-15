@@ -14,7 +14,6 @@ function useCountUp(endVal: number, durationMs = 1500, startNow = false): number
 
   React.useEffect(() => {
     if (!startNow || endVal <= 0) {
-      if (endVal > 0 && !startNow) setVal(0);
       return;
     }
 
@@ -22,7 +21,7 @@ function useCountUp(endVal: number, durationMs = 1500, startNow = false): number
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
-      setVal(endVal);
+      requestAnimationFrame(() => setVal(endVal));
       return;
     }
 

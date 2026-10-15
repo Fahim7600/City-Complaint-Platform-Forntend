@@ -22,8 +22,17 @@ export async function serverFetch<T>(
   path: string,
   options: ServerFetchOptions = {}
 ): Promise<T> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(ACCESS_TOKEN_KEY)?.value;
+  const isPublicPath = path.includes("/public/");
+  let token: string | undefined;
+
+  if (!isPublicPath) {
+    try {
+      const cookieStore = await cookies();
+      token = cookieStore.get(ACCESS_TOKEN_KEY)?.value;
+    } catch {
+      // Cookies not accessible in build / static context
+    }
+  }
 
   const url = path.startsWith("http")
     ? path
@@ -37,7 +46,6 @@ export async function serverFetch<T>(
   }
 
   // Set default revalidation for public data to 5 minutes (matching backend Redis TTL)
-  const isPublicPath = path.includes("/public/");
   const fetchOptions: ServerFetchOptions = {
     ...options,
     headers,

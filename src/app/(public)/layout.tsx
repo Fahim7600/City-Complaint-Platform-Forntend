@@ -4,6 +4,8 @@ import { PublicFooter } from "@/components/layout/public-footer";
 import { publicServerService } from "@/services/public.server";
 import type { Department } from "@/types/department";
 
+export const revalidate = 300;
+
 export default async function PublicLayout({
   children,
 }: {

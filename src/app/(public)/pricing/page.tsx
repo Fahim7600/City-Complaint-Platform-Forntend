@@ -4,12 +4,6 @@ import Link from "next/link";
 import {
   Check,
   Crown,
-  Sparkles,
-  HelpCircle,
-  ShieldCheck,
-  Zap,
-  ArrowRight,
-  Info,
 } from "lucide-react";
 import { publicServerService } from "@/services/public.server";
 import { siteConfig } from "@/lib/site-config";
