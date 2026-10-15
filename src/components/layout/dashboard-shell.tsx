@@ -73,6 +73,12 @@ export function DashboardShell({
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background text-foreground relative">
+      <a
+        href="#dashboard-main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-xl focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary"
+      >
+        Skip to main content
+      </a>
       <React.Suspense fallback={null}>
         <DeniedToastWatcher />
       </React.Suspense>
@@ -99,6 +105,7 @@ export function DashboardShell({
         <Topbar role={effectiveRole} />
 
         <main
+          id="dashboard-main-content"
           className={cn(
             "flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto scrollbar-thin",
             className
