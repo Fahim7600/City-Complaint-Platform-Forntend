@@ -49,7 +49,7 @@ export function DeleteComplaintDialog({
   const deleteMutation = useMutation({
     mutationFn: () => adminService.deleteComplaint(complaint.id),
     onSuccess: () => {
-      toast.success("Complaint permanently deleted");
+      toast.success("Complaint deleted");
       setTypedConfirm("");
       onOpenChange(false);
       onDeleted?.();
@@ -70,21 +70,17 @@ export function DeleteComplaintDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-base font-bold text-destructive">
             <Trash2 className="size-5 text-destructive" />
-            Delete Complaint Ticket
+            Delete Complaint
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            You are about to permanently delete{" "}
-            <span className="font-semibold text-foreground">
-              &quot;{complaint.title}&quot;
-            </span>{" "}
-            (#{shortId}). This action cannot be reversed.
+            This complaint will be removed from all dashboards and lists. Its record is kept in the database for audit purposes.
           </DialogDescription>
         </DialogHeader>
 
         <div className="p-3.5 rounded-xl border border-destructive/30 bg-destructive/10 flex items-start gap-2.5 text-xs text-destructive">
           <AlertTriangle className="size-4 shrink-0 mt-0.5" />
           <p className="leading-relaxed">
-            Deleting this ticket removes it from citizen and department triage queues. All associated audit trails will be archived.
+            Target complaint: <span className="font-semibold text-foreground">&quot;{complaint.title}&quot;</span> (#{shortId}).
           </p>
         </div>
 
@@ -133,7 +129,7 @@ export function DeleteComplaintDialog({
             ) : (
               <>
                 <Trash2 className="size-3.5 mr-1.5" />
-                Permanently Delete Ticket
+                Delete Complaint
               </>
             )}
           </Button>

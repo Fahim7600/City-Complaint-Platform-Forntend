@@ -428,7 +428,7 @@ export function ComplaintSheet({
                   </Button>
                 )}
 
-                {/* 9. Permanent Delete (ADMIN only) */}
+                {/* 9. Delete Complaint (ADMIN only) */}
                 {isAdmin && (
                   <Button
                     variant="destructive"
@@ -437,7 +437,7 @@ export function ComplaintSheet({
                     className="text-xs font-semibold shadow-sm ml-auto"
                   >
                     <XCircle className="size-3.5 mr-1.5" />
-                    Delete Ticket
+                    Delete complaint
                   </Button>
                 )}
               </div>
@@ -579,7 +579,7 @@ export function ComplaintSheet({
               open={closeConfirmOpen}
               onOpenChange={setCloseConfirmOpen}
               title="Close Complaint Ticket"
-              description="Are you sure you want to mark this complaint as permanently closed? This confirms work is complete and finalized. The citizen will be notified."
+              description="Are you sure you want to mark this complaint as closed? This confirms work is complete and finalized. The citizen will be notified."
               confirmText="Close complaint"
               variant="default"
               onConfirm={async () => {
