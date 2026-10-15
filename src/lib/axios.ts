@@ -76,8 +76,7 @@ apiClient.interceptors.response.use(
           } catch {
             clearTokens();
             if (typeof window !== "undefined") {
-              // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-              window.location.href = "/login?expired=1";
+              window.location.replace("/login?expired=1");
             }
             return null;
           } finally {

@@ -275,7 +275,7 @@ export function AttachmentsGallery({
         open={Boolean(deleteTargetId)}
         onOpenChange={(open) => !open && setDeleteTargetId(null)}
         title="Delete Photo Attachment"
-        description="Are you sure you want to permanently delete this photo? This cannot be undone."
+        description="Are you sure you want to delete this photo? This action cannot be undone."
         confirmText="Delete photo"
         cancelText="Cancel"
         variant="destructive"
