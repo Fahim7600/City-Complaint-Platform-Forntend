@@ -21,6 +21,13 @@ import { SearchInput } from "@/components/shared/search-input";
 import { FilterSelect } from "@/components/shared/filter-select";
 import { PaginationControls } from "@/components/shared/pagination-controls";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PaymentsTable } from "./payments-table";
 import { PaymentDetailSheet, type SubscriptionRecord } from "./payment-detail-sheet";
 import { adminService } from "@/services/admin.service";
@@ -54,8 +61,9 @@ export function PaymentsView() {
   const q = getParam("q", "");
   const selectedRecordId = getParam("id", "");
   const currentPage = getNumberParam("page", 1);
+  const [paymentStatusFilter, setPaymentStatusFilter] = React.useState<string>("ALL");
 
-  // 1. Fetch payments / subscriptions from Admin endpoint
+  // 1. Fetch payments / subscriptions from Admin endpoint (backend filters by subscription status)
   const {
     data: paymentsData,
     isLoading,
@@ -85,16 +93,25 @@ export function PaymentsView() {
     return (paymentsData?.items as unknown as SubscriptionRecord[]) || [];
   }, [paymentsData?.items]);
 
-  // Client search filter by citizen name or email
+  // Client search filter by citizen name/email + client-side payment status filter on flattened payments
   const displayedRecords = React.useMemo(() => {
-    if (!q.trim()) return rawRecords;
-    const query = q.toLowerCase().trim();
-    return rawRecords.filter(
-      (r) =>
-        r.user?.name?.toLowerCase().includes(query) ||
-        r.user?.email?.toLowerCase().includes(query)
-    );
-  }, [rawRecords, q]);
+    let list = rawRecords;
+    if (q.trim()) {
+      const query = q.toLowerCase().trim();
+      list = list.filter(
+        (r) =>
+          r.user?.name?.toLowerCase().includes(query) ||
+          r.user?.email?.toLowerCase().includes(query) ||
+          r.id.toLowerCase().includes(query)
+      );
+    }
+    if (paymentStatusFilter !== "ALL") {
+      list = list.filter((r) =>
+        r.payments?.some((p) => p.status === paymentStatusFilter)
+      );
+    }
+    return list;
+  }, [rawRecords, q, paymentStatusFilter]);
 
   const selectedRecord = React.useMemo(() => {
     if (!selectedRecordId) return null;
@@ -191,7 +208,7 @@ export function PaymentsView() {
     toast.success(`Exported ${displayedRecords.length} payment records`);
   };
 
-  const hasActiveFilters = Boolean(q.trim() || status);
+  const hasActiveFilters = Boolean(q.trim() || status || paymentStatusFilter !== "ALL");
 
   const handleClearFilters = () => {
     setParams({
@@ -199,6 +216,7 @@ export function PaymentsView() {
       status: undefined,
       page: 1,
     });
+    setPaymentStatusFilter("ALL");
   };
 
   return (
@@ -259,36 +277,62 @@ export function PaymentsView() {
       <PaymentsChart data={monthlyRevenueData} />
 
       {/* 4. Filters & Search Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-3 flex-1 min-w-[280px] max-w-xl">
-          <div className="flex-1 min-w-[200px]">
-            <SearchInput
-              defaultValue={q}
-              placeholder="Search subscribers by name or email..."
-              className="h-9 text-xs"
+      <div className="space-y-2">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
+            {/* Search subscribers (searches current page) */}
+            <div className="w-72 max-w-full">
+              <SearchInput
+                defaultValue={q}
+                placeholder="Search subscribers by name or email..."
+                className="h-9 text-xs"
+              />
+            </div>
+
+            {/* Backend URL-synced subscription status filter */}
+            <FilterSelect
+              paramKey="status"
+              options={STATUS_OPTIONS}
+              placeholder="Subscription status"
+              allLabel="All Subscriptions"
+              className="w-44 text-xs"
             />
+
+            {/* Separate client-side filter on flattened payment records */}
+            <Select
+              value={paymentStatusFilter}
+              onValueChange={(val) => setPaymentStatusFilter(val || "ALL")}
+            >
+              <SelectTrigger className="w-48 text-xs h-9 bg-background border-border/80">
+                <SelectValue placeholder="Payment status (this page)" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">Payment status: All</SelectItem>
+                <SelectItem value="SUCCEEDED">Succeeded</SelectItem>
+                <SelectItem value="PENDING">Pending</SelectItem>
+                <SelectItem value="FAILED">Failed</SelectItem>
+                <SelectItem value="REFUNDED">Refunded</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          <FilterSelect
-            paramKey="status"
-            options={STATUS_OPTIONS}
-            placeholder="Filter by status"
-            allLabel="All Statuses"
-            className="w-44 text-xs"
-          />
+          {hasActiveFilters && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClearFilters}
+              className="text-xs text-muted-foreground hover:text-destructive h-9 px-2.5 gap-1.5"
+            >
+              <FilterX className="size-3.5" />
+              <span>Clear filters</span>
+            </Button>
+          )}
         </div>
 
-        {hasActiveFilters && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleClearFilters}
-            className="text-xs text-muted-foreground hover:text-destructive h-9 px-2.5 gap-1.5"
-          >
-            <FilterX className="size-3.5" />
-            <span>Clear filters</span>
-          </Button>
-        )}
+        {/* Clear hint for client-side search scope */}
+        <p className="text-[11px] text-muted-foreground/80 pl-1">
+          Hint: Text search and payment status filter apply across records loaded on the current page.
+        </p>
       </div>
 
       {/* 5. Payments Table or Error */}
