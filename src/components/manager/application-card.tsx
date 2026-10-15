@@ -24,18 +24,22 @@ import type { User } from "@/types/user";
 
 interface ApplicationCardProps {
   application: User;
-  departmentName: string;
+  departmentName?: string;
   onApprove: (id: string) => Promise<void>;
   onReject: (id: string, reason: string) => Promise<void>;
   isMutating?: boolean;
+  isAdmin?: boolean;
+  existingManagerName?: string | null;
 }
 
 export function ApplicationCard({
   application,
-  departmentName,
+  departmentName = "Municipal Operations",
   onApprove,
   onReject,
   isMutating = false,
+  isAdmin = false,
+  existingManagerName,
 }: ApplicationCardProps) {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [confirmApproveOpen, setConfirmApproveOpen] = React.useState(false);
@@ -45,8 +49,9 @@ export function ApplicationCard({
   const isManager = application.requestedRole === "MANAGER";
   const isPending = application.approvalStatus === "PENDING";
 
-  // Manager is only authorized to decide Technician applications in their department
-  const canDecide = isTechnician && isPending;
+  // Manager is only authorized to decide Technician applications in their department.
+  // Admin is authorized to decide both Technician and Manager applications across all departments.
+  const canDecide = isPending && (isAdmin || isTechnician);
 
   const initials = application.name
     .split(" ")
@@ -209,7 +214,7 @@ export function ApplicationCard({
               {canDecide ? (
                 <>
                   <span className="text-xs text-muted-foreground">
-                    Action required: Review candidate credentials for field appointment.
+                    Action required: Review candidate credentials for {isManager ? "department manager" : "technician"} appointment.
                   </span>
 
                   <div className="flex items-center gap-2 self-end sm:self-auto">
@@ -233,7 +238,7 @@ export function ApplicationCard({
                       className="text-xs font-bold bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-md shadow-emerald-500/20"
                     >
                       <CheckCircle2 className="size-3.5 mr-1.5" />
-                      Approve Technician
+                      Approve {isManager ? "Manager" : "Technician"}
                     </Button>
                   </div>
                 </>
@@ -257,9 +262,13 @@ export function ApplicationCard({
       <ConfirmDialog
         open={confirmApproveOpen}
         onOpenChange={setConfirmApproveOpen}
-        title={`Approve ${application.name}?`}
-        description={`${application.name} will be assigned the Technician role in ${targetDepartment}. They will be cleared for active ticket dispatch.`}
-        confirmText="Approve Candidate"
+        title={`Approve ${application.name}${application.requestedRole ? ` as ${isManager ? "Manager" : "Technician"}` : ""}?`}
+        description={
+          isManager && existingManagerName
+            ? `⚠️ Warning: ${targetDepartment} already has an assigned manager (${existingManagerName}). Approving will appoint ${application.name} as Manager. Proceed with appointment?`
+            : `${application.name} will be assigned the ${application.requestedRole || "Technician"} role in ${targetDepartment}. They will be granted ${isManager ? "supervisory and triage" : "field dispatch"} permissions.`
+        }
+        confirmText={`Approve ${isManager ? "Manager" : "Candidate"}`}
         cancelText="Cancel"
         variant="default"
         isLoading={isMutating}
