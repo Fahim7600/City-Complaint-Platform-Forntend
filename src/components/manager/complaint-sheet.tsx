@@ -41,6 +41,9 @@ import { EscalateDialog } from "./escalate-dialog";
 import { TriagePriorityDialog } from "./triage-priority-dialog";
 import { RejectComplaintDialog } from "./reject-complaint-dialog";
 import { SendBackDialog } from "./send-back-dialog";
+import { ClearEscalationDialog } from "@/components/admin/complaints/clear-escalation-dialog";
+import { DeleteComplaintDialog } from "@/components/admin/complaints/delete-complaint-dialog";
+import { ResolveComplaintDialog } from "@/components/admin/complaints/resolve-complaint-dialog";
 import { complaintService } from "@/services/complaint.service";
 import { queryKeys } from "@/lib/query-keys";
 import { formatDate } from "@/lib/format-date";
@@ -71,6 +74,9 @@ export function ComplaintSheet({
   const [rejectOpen, setRejectOpen] = React.useState(false);
   const [sendBackOpen, setSendBackOpen] = React.useState(false);
   const [closeConfirmOpen, setCloseConfirmOpen] = React.useState(false);
+  const [clearEscalationOpen, setClearEscalationOpen] = React.useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
+  const [resolveDirectOpen, setResolveDirectOpen] = React.useState(false);
 
   // Fetch full complaint detail
   const {
@@ -371,8 +377,33 @@ export function ComplaintSheet({
                   </Button>
                 )}
 
-                {/* 5. Escalate to Admin (Non-terminal & not already escalated) */}
-                {!isTerminal && !complaint.isEscalated && (
+                {/* 5. Clear Escalation (ADMIN only, when escalated) */}
+                {complaint.isEscalated && isAdmin && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setClearEscalationOpen(true)}
+                    className="text-xs font-semibold border-rose-500/40 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10"
+                  >
+                    <CheckCircle2 className="size-3.5 mr-1.5" />
+                    Clear Escalation
+                  </Button>
+                )}
+
+                {/* 6. Directly Resolve (ADMIN only, on active tickets) */}
+                {isAdmin && !isTerminal && !isResolved && (
+                  <Button
+                    size="sm"
+                    onClick={() => setResolveDirectOpen(true)}
+                    className="text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm shadow-emerald-500/20"
+                  >
+                    <CheckCircle2 className="size-3.5 mr-1.5" />
+                    Resolve Directly
+                  </Button>
+                )}
+
+                {/* 7. Escalate to Admin (Managers only: Non-terminal & not already escalated) */}
+                {!isAdmin && !isTerminal && !complaint.isEscalated && (
                   <Button
                     variant="outline"
                     size="sm"
@@ -384,7 +415,7 @@ export function ComplaintSheet({
                   </Button>
                 )}
 
-                {/* 6. Reject Ticket (PENDING only) */}
+                {/* 8. Reject Ticket (PENDING only) */}
                 {isPending && (
                   <Button
                     variant="destructive"
@@ -394,6 +425,19 @@ export function ComplaintSheet({
                   >
                     <XCircle className="size-3.5 mr-1.5" />
                     Reject Ticket
+                  </Button>
+                )}
+
+                {/* 9. Permanent Delete (ADMIN only) */}
+                {isAdmin && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => setDeleteConfirmOpen(true)}
+                    className="text-xs font-semibold shadow-sm ml-auto"
+                  >
+                    <XCircle className="size-3.5 mr-1.5" />
+                    Delete Ticket
                   </Button>
                 )}
               </div>
@@ -542,6 +586,25 @@ export function ComplaintSheet({
                 await closeMutation.mutateAsync();
               }}
               isLoading={closeMutation.isPending}
+            />
+
+            <ClearEscalationDialog
+              open={clearEscalationOpen}
+              onOpenChange={setClearEscalationOpen}
+              complaint={complaint}
+            />
+
+            <ResolveComplaintDialog
+              open={resolveDirectOpen}
+              onOpenChange={setResolveDirectOpen}
+              complaint={complaint}
+            />
+
+            <DeleteComplaintDialog
+              open={deleteConfirmOpen}
+              onOpenChange={setDeleteConfirmOpen}
+              complaint={complaint}
+              onDeleted={() => onOpenChange(false)}
             />
           </>
         )}
