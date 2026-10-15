@@ -11,14 +11,52 @@ export interface PublicStats {
 }
 
 export interface PublicOverview {
-  platformName?: string;
-  tagline?: string;
-  stats: PublicStats;
+  platform?: {
+    name: string;
+    tagline: string;
+    summary: string;
+  };
+  highlights?: Array<{ title: string; description: string }>;
+  howItWorks?: Array<{ step: number; title: string; description: string }>;
+  roles?: {
+    citizen: string[];
+    technician: string[];
+    manager: string[];
+    admin: string[];
+  };
+  plans?: {
+    free: {
+      monthlyComplaintLimit: number;
+      priority: string;
+      price: number;
+      benefits: string[];
+    };
+    premium: {
+      monthlyComplaintLimit: number;
+      priority: string;
+      price: {
+        amount: number;
+        currency: string;
+        interval: string | null;
+      } | null;
+      benefits: string[];
+    };
+    comparison: Array<{
+      feature: string;
+      free: string;
+      premium: string;
+    }>;
+  };
+  faqs?: Array<{ question: string; answer: string }>;
+  callsToAction?: {
+    register: string;
+    login: string;
+    upgrade: string;
+  };
+  stats: PublicStats | null;
   departments: Department[];
   categories: Category[];
-  premiumInfo: PublicPremiumInfo;
-  features?: Array<{ title: string; description: string; icon?: string }>;
-  faqs?: Array<{ question: string; answer: string }>;
+  premiumInfo?: PublicPremiumInfo;
   [key: string]: unknown;
 }
 
