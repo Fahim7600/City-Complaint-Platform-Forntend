@@ -37,9 +37,9 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           className="object-cover object-center opacity-40 scale-105"
         />
 
-        {/* Teal to Violet Gradient Wash Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#03604c]/90 via-[#04201a]/85 to-[#7c3aed]/80 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#04201a] via-transparent to-transparent opacity-90" />
+        {/* Deep dark gradient overlay ensuring clear white/near-white text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#033b30]/95 via-[#04201a]/90 to-[#2e1065]/90" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/70" />
 
         {/* Layered SVG steps haikei at bottom */}
         <div className="absolute inset-x-0 -bottom-10 h-72 pointer-events-none opacity-20">
@@ -57,10 +57,10 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
             <Sparkles className="size-6 text-white" />
           </div>
           <div>
-            <span className="font-heading text-2xl font-black tracking-tight text-white">
+            <span className="font-heading text-2xl font-black tracking-tight text-[#f4faf7]">
               CityFix
             </span>
-            <p className="text-xs text-[#9ad6c9] font-medium tracking-wide">
+            <p className="text-xs text-[#f4faf7]/85 font-medium tracking-wide">
               Municipal Grievance & Civic Service Platform
             </p>
           </div>
@@ -68,36 +68,36 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
 
         {/* Middle Feature Highlights */}
         <div className="relative z-10 my-auto max-w-lg space-y-6">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold backdrop-blur-md text-[#c084fc] border border-white/10">
-            <ShieldCheck className="size-3.5" />
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold backdrop-blur-md text-[#f4faf7] border border-white/20">
+            <ShieldCheck className="size-3.5 text-teal-300" />
             Verified Transparent Governance
           </div>
 
-          <h2 className="font-heading text-3xl xl:text-4xl font-extrabold tracking-tight text-white leading-tight">
+          <h2 className="font-heading text-3xl xl:text-4xl font-extrabold tracking-tight text-[#f4faf7] [text-shadow:0_2px_12px_rgba(0,0,0,0.6)] leading-tight">
             Empowering citizens, streamlining municipal resolutions.
           </h2>
 
-          <p className="text-sm xl:text-base text-slate-200 leading-relaxed font-normal">
+          <p className="text-sm xl:text-base text-[#f4faf7]/90 leading-relaxed font-normal">
             Real-time tracking of public works, direct field technician dispatching, SLA-backed complaint resolution, and community accountability for your city.
           </p>
 
           <div className="grid grid-cols-2 gap-4 pt-2">
-            <div className="rounded-xl bg-white/5 border border-white/10 p-3.5 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-[#9ad6c9] text-xs font-semibold mb-1">
-                <Clock className="size-4 text-[#a855f7]" />
+            <div className="rounded-xl bg-white/10 border border-white/15 p-3.5 backdrop-blur-sm">
+              <div className="flex items-center gap-2 text-teal-200 text-xs font-semibold mb-1">
+                <Clock className="size-4 text-violet-300" />
                 Guaranteed SLAs
               </div>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-[#f4faf7]/85">
                 Potholes, sewage & lights monitored with strict resolution timelines.
               </p>
             </div>
 
-            <div className="rounded-xl bg-white/5 border border-white/10 p-3.5 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-[#9ad6c9] text-xs font-semibold mb-1">
-                <Building2 className="size-4 text-[#a855f7]" />
+            <div className="rounded-xl bg-white/10 border border-white/15 p-3.5 backdrop-blur-sm">
+              <div className="flex items-center gap-2 text-teal-200 text-xs font-semibold mb-1">
+                <Building2 className="size-4 text-violet-300" />
                 Multi-Department
               </div>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-[#f4faf7]/85">
                 Unified portal across Roads, Water Supply, and Sanitation.
               </p>
             </div>
@@ -105,7 +105,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         </div>
 
         {/* Footer Tagline */}
-        <div className="relative z-10 text-xs text-slate-400">
+        <div className="relative z-10 text-xs text-[#f4faf7]/75 font-medium">
           CityFix Civic Platform &copy; {new Date().getFullYear()} &bull; Transparent Municipal Governance
         </div>
       </div>

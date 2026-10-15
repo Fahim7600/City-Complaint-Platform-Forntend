@@ -35,7 +35,7 @@ export function PaymentCancelCard() {
       <div className="relative z-10 w-full max-w-md mx-auto">
         <Card className="border border-border/80 bg-card/90 backdrop-blur-xl shadow-2xl p-6 sm:p-8 space-y-6 text-center">
           {/* Amber/Red X Icon */}
-          <div className="flex size-18 mx-auto items-center justify-center rounded-3xl bg-amber-500/10 text-amber-500 dark:text-amber-400 border border-amber-500/20 shadow-[0_0_25px_rgba(245,158,11,0.2)]">
+          <div className="flex size-18 mx-auto items-center justify-center rounded-3xl bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20 shadow-[0_0_25px_rgba(245,158,11,0.2)]">
             <XCircle className="size-9" />
           </div>
 

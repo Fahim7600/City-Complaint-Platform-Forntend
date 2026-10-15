@@ -91,7 +91,7 @@ export function DashboardShell({
 
       {/* Faint stacked-steps SVG background pattern at bottom */}
       <div
-        className="pointer-events-none fixed bottom-0 left-0 right-0 h-72 z-0 opacity-[0.03] dark:opacity-[0.05] bg-[url('/stacked-steps-haikei.svg')] bg-cover bg-bottom select-none"
+        className="pointer-events-none fixed bottom-0 left-0 right-0 h-72 z-0 opacity-[0.02] dark:opacity-[0.04] bg-[url('/stacked-steps-haikei.svg')] bg-cover bg-bottom select-none"
         aria-hidden="true"
       />
 

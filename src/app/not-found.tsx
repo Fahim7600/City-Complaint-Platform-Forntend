@@ -30,7 +30,7 @@ export default function NotFound() {
 
         {/* Big Glowing 404 */}
         <div className="space-y-2">
-          <h1 className="font-heading text-8xl sm:text-9xl font-black tracking-tight bg-gradient-to-r from-primary via-teal-400 to-violet-500 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(50,124,105,0.4)]">
+          <h1 className="font-heading text-8xl sm:text-9xl font-black tracking-tight bg-gradient-to-r from-teal-800 via-teal-700 to-violet-800 dark:from-teal-300 dark:via-teal-200 dark:to-violet-400 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(50,124,105,0.4)]">
             404
           </h1>
           <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">

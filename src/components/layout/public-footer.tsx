@@ -49,7 +49,7 @@ export function PublicFooter({ departments = [] }: PublicFooterProps) {
               </span>
             </Link>
 
-            <p className="text-xs text-teal-100/75 max-w-sm leading-relaxed">
+            <p className="text-xs text-[#e6f4f1]/90 max-w-sm leading-relaxed">
               {siteConfig.description}
             </p>
 
@@ -226,7 +226,7 @@ export function PublicFooter({ departments = [] }: PublicFooterProps) {
         </div>
 
         {/* Bottom Bar: Copyright */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-teal-200/60">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#9ad6c9]">
           <p>© {currentYear} {siteConfig.name}. All rights reserved.</p>
           <p className="flex items-center gap-1.5">
             <span>Built with Next.js, TypeScript & Tailwind CSS</span>

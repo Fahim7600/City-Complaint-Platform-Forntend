@@ -201,7 +201,7 @@ export function Step1Category({
       {/* Selected Category routing banner */}
       {selectedCategory && (
         <div className="rounded-xl border border-violet-500/30 bg-violet-500/10 p-4 transition-all duration-300 flex items-center gap-3">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-violet-500/20 text-violet-400">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-violet-500/15 text-violet-600 dark:text-violet-400">
             <Building2 className="size-4" />
           </div>
           <div className="space-y-0.5">

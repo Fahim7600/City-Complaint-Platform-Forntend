@@ -190,7 +190,7 @@ export function PaymentSuccessContent() {
                 </div>
 
                 <div className="space-y-1 pt-1">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold bg-amber-500/15 text-amber-500 border border-amber-500/30 shadow-[0_0_12px_rgba(245,158,11,0.25)] mb-1">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30 shadow-[0_0_12px_rgba(245,158,11,0.25)] mb-1">
                     <Crown className="size-3.5 fill-amber-500" />
                     Verified Citizen PRO
                   </div>

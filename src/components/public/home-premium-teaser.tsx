@@ -37,14 +37,14 @@ export function HomePremiumTeaser({ overview }: HomePremiumTeaserProps) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Left Column: Heading & Benefits */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold bg-violet-500/15 border border-violet-500/30 text-violet-600 dark:text-violet-400">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold bg-violet-500/15 border border-violet-500/30 text-violet-700 dark:text-violet-300">
                 <Crown className="size-3.5" />
                 <span>Priority Citizen Membership</span>
               </div>
 
               <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">
                 Accelerate Your Civic Issues with{" "}
-                <span className="bg-gradient-to-r from-violet-500 to-indigo-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-violet-700 via-indigo-700 to-teal-700 dark:from-violet-400 dark:via-indigo-300 dark:to-teal-300 bg-clip-text text-transparent">
                   CityFix Premium
                 </span>
               </h2>
@@ -57,7 +57,7 @@ export function HomePremiumTeaser({ overview }: HomePremiumTeaserProps) {
               <ul className="space-y-3 pt-2">
                 {benefits.map((b) => (
                   <li key={b} className="flex items-start gap-3 text-xs sm:text-sm text-foreground/90">
-                    <div className="size-5 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0 mt-0.5 text-emerald-600 dark:text-emerald-400">
+                    <div className="size-5 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0 mt-0.5 text-emerald-700 dark:text-emerald-300">
                       <Check className="size-3" />
                     </div>
                     <span>{b}</span>
