@@ -6,10 +6,8 @@ import {
   Building2,
   Clock,
   FolderTree,
-  Mail,
   Star,
   Users,
-  Wrench,
   CheckCircle2,
   XCircle,
 } from "lucide-react";
@@ -17,7 +15,6 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
@@ -55,8 +52,6 @@ export function DepartmentDetailSheet({
     enabled: open && Boolean(departmentId),
   });
 
-  const IconComponent = department ? getDepartmentIcon(department.name) : Building2;
-
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
@@ -69,7 +64,10 @@ export function DepartmentDetailSheet({
             <div className="p-6 border-b border-border/60 bg-muted/20 space-y-3">
               <div className="flex items-start gap-3.5">
                 <div className="size-12 rounded-2xl bg-gradient-to-tr from-violet-500/20 to-indigo-500/10 border border-violet-500/30 flex items-center justify-center shrink-0 shadow-sm">
-                  <IconComponent className="size-6 text-violet-500 dark:text-violet-400" />
+                  {React.createElement(
+                    department ? getDepartmentIcon(department.name) : Building2,
+                    { className: "size-6 text-violet-500 dark:text-violet-400" }
+                  )}
                 </div>
                 <div className="space-y-1 min-w-0">
                   <SheetTitle className="font-heading text-lg font-bold text-foreground">

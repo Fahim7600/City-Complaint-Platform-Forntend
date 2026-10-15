@@ -5,10 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import {
   AlertCircle,
   Building2,
-  FolderTree,
   Plus,
   RefreshCw,
-  Search,
 } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -24,7 +22,7 @@ import { useUrlState } from "@/hooks/use-url-state";
 import type { Department } from "@/types/department";
 
 export function DepartmentsView() {
-  const { getParam, setParam, setParams } = useUrlState();
+  const { getParam, setParam } = useUrlState();
 
   const q = getParam("q", "");
   const selectedDeptId = getParam("id", "");

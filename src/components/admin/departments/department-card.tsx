@@ -3,11 +3,8 @@
 import * as React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  AlertTriangle,
   FolderTree,
-  Loader2,
   Pencil,
-  ShieldCheck,
   Trash2,
   User,
   Users,
@@ -15,7 +12,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { getDepartmentIcon } from "./department-icon-helper";
@@ -46,8 +42,6 @@ export function DepartmentCard({
   const queryClient = useQueryClient();
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
-  const IconComponent = getDepartmentIcon(department.name);
-
   const deleteMutation = useMutation({
     mutationFn: () => adminService.deleteDepartment(department.id),
     onSuccess: () => {
@@ -75,7 +69,9 @@ export function DepartmentCard({
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
               <div className="size-11 rounded-2xl bg-gradient-to-tr from-violet-500/20 to-indigo-500/10 border border-violet-500/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300 shadow-sm">
-                <IconComponent className="size-5 text-violet-500 dark:text-violet-400" />
+                {React.createElement(getDepartmentIcon(department.name), {
+                  className: "size-5 text-violet-500 dark:text-violet-400",
+                })}
               </div>
               <div className="min-w-0">
                 <h3 className="font-heading font-bold text-sm text-foreground truncate group-hover:text-violet-500 dark:group-hover:text-violet-400 transition-colors">

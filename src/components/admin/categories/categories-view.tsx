@@ -27,7 +27,7 @@ import type { Department } from "@/types/department";
 const PAGE_LIMIT = 10;
 
 export function CategoriesView() {
-  const { getParam, getNumberParam, setParam, setParams } = useUrlState();
+  const { getParam, getNumberParam, setParams } = useUrlState();
 
   const q = getParam("q", "");
   const departmentId = getParam("departmentId", "");

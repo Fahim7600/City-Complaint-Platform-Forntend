@@ -7,7 +7,6 @@ import {
   ChevronRight,
   Clock,
   Copy,
-  CreditCard,
   Crown,
   Mail,
   ShieldAlert,

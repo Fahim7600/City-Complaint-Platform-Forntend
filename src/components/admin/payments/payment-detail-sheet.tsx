@@ -2,17 +2,14 @@
 
 import * as React from "react";
 import {
-  Calendar,
   Check,
   CheckCircle2,
   Clock,
   Copy,
   CreditCard,
   Crown,
-  DollarSign,
   Mail,
   ShieldAlert,
-  User,
   XCircle,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -20,7 +17,6 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
