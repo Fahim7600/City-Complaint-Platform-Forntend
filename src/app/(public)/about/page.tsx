@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     images: [
       {
-        url: "https://images.unsplash.com/photo-1541888946425-d0fbb1861593?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1200&auto=format&fit=crop",
         width: 1200,
         height: 630,
         alt: "CityFix Municipal Field Operations",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     description:
       "Learn about CityFix's civic mission, our SLA-backed complaint lifecycle, and how citizens, technicians, managers, and administrators work together.",
     images: [
-      "https://images.unsplash.com/photo-1541888946425-d0fbb1861593?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1200&auto=format&fit=crop",
     ],
   },
 };
@@ -193,7 +193,7 @@ export default async function AboutPage() {
           <div className="lg:col-span-5 relative">
             <div className="relative h-80 sm:h-96 w-full rounded-3xl overflow-hidden shadow-2xl border border-border/80">
               <Image
-                src="https://images.unsplash.com/photo-1541888946425-d0fbb1861593?q=80&w=800&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop"
                 alt="Civic workers repairing municipal infrastructure"
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"
