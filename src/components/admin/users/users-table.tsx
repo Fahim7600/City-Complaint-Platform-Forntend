@@ -7,6 +7,7 @@ import {
   Crown,
   Eye,
   MoreHorizontal,
+  Send,
   Shield,
   UserCog,
   UserX,
@@ -35,6 +36,7 @@ interface UsersTableProps {
   onChangeRole: (user: User) => void;
   onDeactivate: (user: User) => void;
   onReactivate: (user: User) => void;
+  onResendInvite?: (user: User) => void;
   emptyState?: React.ReactNode;
 }
 
@@ -53,6 +55,7 @@ export function UsersTable({
   onChangeRole,
   onDeactivate,
   onReactivate,
+  onResendInvite,
   emptyState,
 }: UsersTableProps) {
   const columns: ColumnDef<User>[] = React.useMemo(
@@ -132,19 +135,31 @@ export function UsersTable({
         header: "Status",
         cell: (user) => {
           const isDeactivated = Boolean(user.deletedAt);
-          return isDeactivated ? (
-            <Badge
-              variant="outline"
-              className="bg-muted text-muted-foreground border-border text-[10px] font-semibold"
-            >
-              <UserX className="size-2.5 mr-1 text-rose-500" />
-              Deactivated
-            </Badge>
-          ) : (
-            <Badge className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[10px] font-semibold">
-              <CheckCircle2 className="size-2.5 mr-1" />
-              Active
-            </Badge>
+          return (
+            <div className="flex flex-col gap-1 items-start">
+              {isDeactivated ? (
+                <Badge
+                  variant="outline"
+                  className="bg-muted text-muted-foreground border-border text-[10px] font-semibold"
+                >
+                  <UserX className="size-2.5 mr-1 text-rose-500" />
+                  Deactivated
+                </Badge>
+              ) : (
+                <Badge className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[10px] font-semibold">
+                  <CheckCircle2 className="size-2.5 mr-1" />
+                  Active
+                </Badge>
+              )}
+              {user.mustChangePassword && (
+                <Badge
+                  variant="outline"
+                  className="border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-semibold"
+                >
+                  Invite pending
+                </Badge>
+              )}
+            </div>
           );
         },
       },
@@ -209,6 +224,17 @@ export function UsersTable({
                         Change Role
                       </DropdownMenuItem>
 
+                      {/* Resend Invite for pending users */}
+                      {onResendInvite && user.mustChangePassword && (
+                        <DropdownMenuItem
+                          onClick={() => onResendInvite(user)}
+                          className="text-xs text-amber-600 dark:text-amber-400 cursor-pointer"
+                        >
+                          <Send className="size-3.5 mr-2 text-amber-500" />
+                          Resend Invite
+                        </DropdownMenuItem>
+                      )}
+
                       {/* Deactivate / Reactivate */}
                       {isDeactivated ? (
                         <DropdownMenuItem
@@ -241,6 +267,7 @@ export function UsersTable({
       onChangeRole,
       onDeactivate,
       onReactivate,
+      onResendInvite,
       onSelectUser,
     ]
   );

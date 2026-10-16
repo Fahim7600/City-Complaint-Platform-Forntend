@@ -2,16 +2,18 @@
 
 import * as React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Users, UserX, RefreshCw } from "lucide-react";
+import { Users, UserX, RefreshCw, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/shared/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PaginationControls } from "@/components/shared/pagination-controls";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { Button } from "@/components/ui/button";
 import { UsersFilters } from "./users-filters";
 import { UsersTable } from "./users-table";
 import { ChangeRoleDialog } from "./change-role-dialog";
 import { UserDetailSheet } from "./user-detail-sheet";
+import { InviteStaffDialog } from "./invite-staff-dialog";
 import { adminService } from "@/services/admin.service";
 import { queryKeys } from "@/lib/query-keys";
 import { getErrorMessage } from "@/lib/axios";
@@ -57,6 +59,7 @@ export function UsersView() {
   );
 
   // Dialog states
+  const [inviteStaffOpen, setInviteStaffOpen] = React.useState(false);
   const [roleDialogOpen, setRoleDialogOpen] = React.useState(false);
   const [targetRoleUser, setTargetRoleUser] = React.useState<User | null>(null);
 
@@ -216,12 +219,35 @@ export function UsersView() {
     },
   });
 
+  const resendInviteMutation = useMutation({
+    mutationFn: (targetUser: User) =>
+      adminService.resendStaffInvite(targetUser.id),
+    onSuccess: (_, targetUser) => {
+      toast.success(`New invitation sent to ${targetUser.email}`);
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
+    },
+    onError: (err) => {
+      toast.error(getErrorMessage(err));
+    },
+  });
+
   return (
     <div className="space-y-6 pb-12">
       {/* 1. Page Header */}
       <PageHeader
         title="User management"
         description="Oversee citizen accounts, manage municipal personnel, update roles, and control access permissions."
+        actions={
+          <Button
+            variant="neon"
+            size="sm"
+            onClick={() => setInviteStaffOpen(true)}
+            className="text-xs font-semibold gap-1.5"
+          >
+            <UserPlus className="size-4" />
+            <span>Add staff</span>
+          </Button>
+        }
       />
 
       {/* 2. Filters */}
@@ -271,6 +297,7 @@ export function UsersView() {
               setTargetReactivateUser(u);
               setReactivateDialogOpen(true);
             }}
+            onResendInvite={(u) => resendInviteMutation.mutate(u)}
             emptyState={
               <EmptyState
                 icon={Users}
@@ -397,6 +424,12 @@ export function UsersView() {
           setTargetReactivateUser(u);
           setReactivateDialogOpen(true);
         }}
+      />
+
+      {/* Invite Staff Dialog */}
+      <InviteStaffDialog
+        open={inviteStaffOpen}
+        onOpenChange={setInviteStaffOpen}
       />
     </div>
   );
