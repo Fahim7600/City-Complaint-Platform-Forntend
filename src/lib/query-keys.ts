@@ -42,8 +42,10 @@ export const queryKeys = {
       [...queryKeys.departments.all, "list", { includeDeleted }] as const,
     detail: (id: string) =>
       [...queryKeys.departments.all, "detail", id] as const,
-    technicians: (departmentId: string) =>
+    technicians: (departmentId?: string) =>
       [...queryKeys.departments.all, "technicians", departmentId] as const,
+    myTechnicians: () =>
+      [...queryKeys.departments.all, "my-technicians"] as const,
     managerQueue: (params?: ComplaintListQuery) =>
       [...queryKeys.departments.all, "manager-queue", params] as const,
   },

@@ -13,12 +13,21 @@ export interface Department {
 export interface DepartmentTechnician {
   id: string;
   name: string;
+  email?: string;
+  phone?: string | null;
   avatarUrl: string | null;
   isAvailable: boolean;
   reviewCount: number;
   averageRating: number;
   qualification: string | null;
   experience: string | null;
+  invitePending?: boolean;
+  mustChangePassword?: boolean;
+  createdAt?: string;
+}
+
+export interface BlockingComplaintsData {
+  blockingComplaintIds: string[];
 }
 
 export interface DepartmentWithTechnicians {
@@ -35,3 +44,4 @@ export interface UpdateDepartmentInput {
   name?: string;
   description?: string;
 }
+

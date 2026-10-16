@@ -21,6 +21,7 @@ import type {
 } from "@/types/payment";
 import type { DashboardStats } from "@/types/stats";
 import type {
+  AdminInviteStaffInput,
   ListUsersQuery,
   StaffApplicationDecisionInput,
   User,
@@ -290,6 +291,24 @@ export const adminService = {
     const res = await apiClient.patch<ApiResponse<User>>(
       `/staff-applications/${id}`,
       data
+    );
+    return res.data.data!;
+  },
+
+  /**
+   * Invite a staff member (Technician or Manager) directly with a temporary password.
+   */
+  async inviteStaff(data: AdminInviteStaffInput): Promise<User> {
+    const res = await apiClient.post<ApiResponse<User>>("/admin/staff", data);
+    return res.data.data!;
+  },
+
+  /**
+   * Resend invitation email with a newly generated temporary password to staff member.
+   */
+  async resendStaffInvite(userId: string): Promise<User> {
+    const res = await apiClient.post<ApiResponse<User>>(
+      `/admin/staff/${userId}/resend-invite`
     );
     return res.data.data!;
   },

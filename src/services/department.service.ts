@@ -6,6 +6,7 @@ import type {
   DepartmentTechnician,
   DepartmentWithTechnicians,
 } from "@/types/department";
+import type { ManagerInviteTechnicianInput, User } from "@/types/user";
 
 export const departmentService = {
   /**
@@ -31,15 +32,66 @@ export const departmentService = {
   },
 
   /**
-   * List active technicians for a department with ratings and availability.
+   * List technicians for the authenticated manager's department.
+   * Includes invitePending / mustChangePassword flags.
+   */
+  async getMyDepartmentTechnicians(): Promise<DepartmentTechnician[]> {
+    const res = await apiClient.get<ApiResponse<DepartmentTechnician[]>>(
+      "/departments/my/technicians"
+    );
+    return res.data.data || [];
+  },
+
+  /**
+   * List active technicians for a department with ratings and availability (public or specific dept).
    */
   async getMyTechnicians(
-    departmentId: string
+    departmentId?: string
   ): Promise<DepartmentTechnician[]> {
+    if (!departmentId) {
+      return this.getMyDepartmentTechnicians();
+    }
     const res = await apiClient.get<ApiResponse<DepartmentTechnician[]>>(
       `/public/departments/${departmentId}/technicians`
     );
     return res.data.data || [];
+  },
+
+  /**
+   * Invite a new technician into manager's department.
+   * Sends temporary password email via Brevo.
+   */
+  async inviteTechnician(
+    data: ManagerInviteTechnicianInput
+  ): Promise<User> {
+    const res = await apiClient.post<ApiResponse<User>>(
+      "/departments/my/technicians",
+      data
+    );
+    return res.data.data!;
+  },
+
+  /**
+   * Resend invitation email with new temporary password to technician.
+   */
+  async resendInvite(technicianId: string): Promise<User> {
+    const res = await apiClient.post<ApiResponse<User>>(
+      `/departments/my/technicians/${technicianId}/resend-invite`
+    );
+    return res.data.data!;
+  },
+
+  /**
+   * Remove a technician from manager's department.
+   * Blocked (409) if technician has active ASSIGNED or IN_PROGRESS complaints.
+   */
+  async removeTechnician(
+    technicianId: string
+  ): Promise<{ technicianId: string }> {
+    const res = await apiClient.delete<
+      ApiResponse<{ technicianId: string }>
+    >(`/departments/my/technicians/${technicianId}`);
+    return res.data.data!;
   },
 
   /**
@@ -52,3 +104,4 @@ export const departmentService = {
     return res.data.data!;
   },
 };
+

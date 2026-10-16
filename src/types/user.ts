@@ -39,6 +39,37 @@ export interface User {
   updatedAt: string;
   deletedAt: string | null;
   department?: Department | null;
+  mustChangePassword?: boolean;
+  tempPasswordExpiresAt?: string | null;
+  invitedById?: string | null;
+}
+
+export interface ManagerInviteTechnicianInput {
+  name: string;
+  email: string;
+  phone?: string;
+}
+
+export interface AdminInviteStaffInput {
+  name: string;
+  email: string;
+  phone?: string;
+  role: "TECHNICIAN" | "MANAGER";
+  departmentId: string;
+}
+
+export interface ForgotPasswordInput {
+  email: string;
+}
+
+export interface VerifyResetCodeInput {
+  email: string;
+  code: string;
+}
+
+export interface ResetPasswordInput {
+  resetToken: string;
+  newPassword: string;
 }
 
 export interface UpdateProfileInput {
@@ -73,3 +104,4 @@ export interface ListUsersQuery {
   search?: string;
   includeDeleted?: boolean;
 }
+

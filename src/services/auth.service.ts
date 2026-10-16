@@ -76,4 +76,43 @@ export const authService = {
   async logout(): Promise<void> {
     await apiClient.post<ApiResponse<void>>("/auth/logout");
   },
+
+  /**
+   * Request a 6-digit password reset code sent via email.
+   * Returns cooldownSeconds (default 60s).
+   */
+  async forgotPassword(email: string): Promise<{ cooldownSeconds: number }> {
+    const res = await apiClient.post<
+      ApiResponse<{ cooldownSeconds: number }>
+    >("/auth/forgot-password", { email });
+    return res.data.data || { cooldownSeconds: 60 };
+  },
+
+  /**
+   * Verify the 6-digit password reset code.
+   * Returns a 32-byte hex resetToken and expiresInSeconds (900s / 15m).
+   */
+  async verifyResetCode(
+    email: string,
+    code: string
+  ): Promise<{ resetToken: string; expiresInSeconds: number }> {
+    const res = await apiClient.post<
+      ApiResponse<{ resetToken: string; expiresInSeconds: number }>
+    >("/auth/verify-reset-code", { email, code });
+    return res.data.data!;
+  },
+
+  /**
+   * Reset account password using the verified resetToken.
+   */
+  async resetPassword(
+    resetToken: string,
+    newPassword: string
+  ): Promise<void> {
+    await apiClient.post<ApiResponse<void>>("/auth/reset-password", {
+      resetToken,
+      newPassword,
+    });
+  },
 };
+
