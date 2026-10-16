@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="cityfix-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#03604c"/>
+      <stop offset="45%" stop-color="#0d9488"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#cityfix-gradient)"/>
+  <path d="M16 6.5c0 4.2-3.3 7.5-7.5 7.5 4.2 0 7.5 3.3 7.5 7.5 0-4.2 3.3-7.5 7.5-7.5-4.2 0-7.5-3.3-7.5-7.5z" fill="#ffffff"/>
+  <path d="M23.5 7c0 1.8-1.4 3.2-3.2 3.2 1.8 0 3.2 1.4 3.2 3.2 0-1.8 1.4-3.2 3.2-3.2-1.8 0-3.2-1.4-3.2-3.2z" fill="#ffffff" opacity="0.85"/>
+</svg>
