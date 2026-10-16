@@ -3,13 +3,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   FileCheck,
-  AlertTriangle,
   Scale,
   CreditCard,
   Clock,
   ShieldX,
   Mail,
-  Sparkles,
 } from "lucide-react";
 import { siteConfig } from "@/lib/site-config";
 import { Card, CardContent } from "@/components/ui/card";

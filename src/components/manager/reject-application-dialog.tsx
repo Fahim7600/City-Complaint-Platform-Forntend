@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import type { User } from "@/types/user";
+import type { StaffApplication, User } from "@/types/user";
 
 const rejectApplicationSchema = z.object({
   reason: z
@@ -30,7 +30,7 @@ type RejectApplicationFormData = z.infer<typeof rejectApplicationSchema>;
 interface RejectApplicationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  applicant: User;
+  applicant: StaffApplication | User;
   onConfirm: (reason: string) => Promise<void>;
   isLoading?: boolean;
 }

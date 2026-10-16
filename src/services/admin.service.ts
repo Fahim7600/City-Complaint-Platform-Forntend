@@ -288,9 +288,13 @@ export const adminService = {
     id: string,
     data: StaffApplicationDecisionInput
   ): Promise<User> {
+    const payload = {
+      decision: data.decision || data.status,
+      ...(data.reason ? { reason: data.reason } : {}),
+    };
     const res = await apiClient.patch<ApiResponse<User>>(
       `/staff-applications/${id}`,
-      data
+      payload
     );
     return res.data.data!;
   },

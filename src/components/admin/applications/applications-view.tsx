@@ -22,7 +22,7 @@ import { queryKeys } from "@/lib/query-keys";
 import { useUrlState } from "@/hooks/use-url-state";
 import { getErrorMessage } from "@/lib/axios";
 import type { Department } from "@/types/department";
-import type { Role, User } from "@/types/user";
+import type { Role, StaffApplication, User } from "@/types/user";
 import type { PaginatedData } from "@/types/api";
 
 type ApplicationTab = "PENDING" | "APPROVED" | "REJECTED";
@@ -38,7 +38,7 @@ export function ApplicationsView() {
   const currentPage = getNumberParam("page", 1);
 
   // Local session history of decided applications
-  const [decidedHistory, setDecidedHistory] = React.useState<User[]>([]);
+  const [decidedHistory, setDecidedHistory] = React.useState<(StaffApplication | User)[]>([]);
 
   // 1. Fetch departments to resolve department names
   const { data: departments = [] } = useQuery<Department[]>({
@@ -107,7 +107,7 @@ export function ApplicationsView() {
   });
 
   // Filter pending items by role & department if applied
-  const rawPendingItems = React.useMemo<User[]>(() => pendingData?.items || [], [pendingData?.items]);
+  const rawPendingItems = React.useMemo<StaffApplication[]>(() => pendingData?.items || [], [pendingData?.items]);
   const displayedPendingItems = React.useMemo(() => {
     return rawPendingItems.filter((item) => {
       if (roleFilter && item.requestedRole !== roleFilter) return false;
@@ -156,14 +156,14 @@ export function ApplicationsView() {
         queryKey: queryKeys.staffApplications.all,
       });
 
-      const prevData = queryClient.getQueryData<PaginatedData<User>>(
+      const prevData = queryClient.getQueryData<PaginatedData<StaffApplication>>(
         queryKeys.staffApplications.list({ page: currentPage, limit: PAGE_LIMIT })
       );
 
       const target = prevData?.items.find((item) => item.id === id);
 
       if (prevData) {
-        queryClient.setQueryData<PaginatedData<User>>(
+        queryClient.setQueryData<PaginatedData<StaffApplication>>(
           queryKeys.staffApplications.list({ page: currentPage, limit: PAGE_LIMIT }),
           {
             ...prevData,

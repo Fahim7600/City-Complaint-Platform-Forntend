@@ -1,6 +1,51 @@
 import apiClient from "@/lib/axios";
 import type { ApiResponse, PaginatedData } from "@/types/api";
-import type { StaffApplicationDecisionInput, User } from "@/types/user";
+import type {
+  ApprovalStatus,
+  Department,
+  Role,
+  StaffApplication,
+  StaffApplicationDecisionInput,
+  User,
+} from "@/types";
+
+interface RawStaffApplicationItem {
+  id: string;
+  name: string;
+  email: string;
+  requestedRole?: Role | null;
+  role?: Role;
+  departmentId?: string | null;
+  department?: Department | null;
+  experience?: string | null;
+  qualification?: string | null;
+  createdAt: string;
+  approvalStatus?: ApprovalStatus | null;
+  avatarUrl?: string | null;
+  decidedAt?: string | null;
+  decidedById?: string | null;
+}
+
+function normalizeStaffApplication(
+  raw: RawStaffApplicationItem
+): StaffApplication {
+  return {
+    id: raw.id,
+    name: raw.name,
+    email: raw.email,
+    requestedRole: (raw.requestedRole || raw.role || "TECHNICIAN") as Role,
+    departmentId: raw.departmentId ?? raw.department?.id ?? null,
+    experience: raw.experience ?? null,
+    qualification: raw.qualification ?? null,
+    createdAt: raw.createdAt,
+    approvalStatus: raw.approvalStatus || "PENDING",
+    role: raw.role || raw.requestedRole || null,
+    avatarUrl: raw.avatarUrl ?? null,
+    department: raw.department ?? null,
+    decidedAt: raw.decidedAt ?? null,
+    decidedById: raw.decidedById ?? null,
+  };
+}
 
 export const staffApplicationService = {
   /**
@@ -10,18 +55,26 @@ export const staffApplicationService = {
   async getApplications(params?: {
     page?: number;
     limit?: number;
-  }): Promise<PaginatedData<User>> {
-    const res = await apiClient.get<ApiResponse<PaginatedData<User> | User[]>>(
-      "/staff-applications",
-      { params }
-    );
+  }): Promise<PaginatedData<StaffApplication>> {
+    const res = await apiClient.get<
+      ApiResponse<PaginatedData<RawStaffApplicationItem> | RawStaffApplicationItem[]>
+    >("/staff-applications", { params });
 
     const raw = res.data.data;
-    if (raw && typeof raw === "object" && "items" in raw && Array.isArray(raw.items)) {
-      return raw as PaginatedData<User>;
+    if (
+      raw &&
+      typeof raw === "object" &&
+      "items" in raw &&
+      Array.isArray(raw.items)
+    ) {
+      return {
+        ...raw,
+        items: raw.items.map(normalizeStaffApplication),
+      };
     }
 
-    const items = Array.isArray(raw) ? raw : [];
+    const rawList = Array.isArray(raw) ? raw : [];
+    const items = rawList.map(normalizeStaffApplication);
     return {
       items,
       total: items.length,
@@ -38,9 +91,14 @@ export const staffApplicationService = {
     id: string,
     data: StaffApplicationDecisionInput
   ): Promise<User> {
+    const payload = {
+      decision: data.decision || data.status,
+      ...(data.reason ? { reason: data.reason } : {}),
+    };
+
     const res = await apiClient.patch<ApiResponse<User>>(
       `/staff-applications/${id}`,
-      data
+      payload
     );
     return res.data.data!;
   },

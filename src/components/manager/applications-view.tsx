@@ -14,11 +14,13 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { PaginationControls } from "@/components/shared/pagination-controls";
 import { ApplicationCard } from "./application-card";
 import { staffApplicationService } from "@/services/staff-application.service";
+import { publicService } from "@/services/public.service";
 import { queryKeys } from "@/lib/query-keys";
 import { useUrlState } from "@/hooks/use-url-state";
 import { useAuth } from "@/hooks/use-auth";
 import { getErrorMessage } from "@/lib/axios";
-import type { User } from "@/types/user";
+import type { Department } from "@/types/department";
+import type { StaffApplication } from "@/types/user";
 import type { PaginatedData } from "@/types/api";
 import { cn } from "@/lib/utils";
 
@@ -33,7 +35,19 @@ export function ApplicationsView() {
   const page = Number(getParam("page", "1")) || 1;
 
   // Local state for locally decided applications within this session
-  const [decidedHistory, setDecidedHistory] = React.useState<User[]>([]);
+  const [decidedHistory, setDecidedHistory] = React.useState<StaffApplication[]>([]);
+
+  // 1. Fetch departments to resolve real department names
+  const { data: departments = [] } = useQuery<Department[]>({
+    queryKey: queryKeys.departments.all,
+    queryFn: () => publicService.getDepartments(),
+  });
+
+  const departmentsMap = React.useMemo(() => {
+    const map = new Map<string, string>();
+    departments.forEach((d) => map.set(d.id, d.name));
+    return map;
+  }, [departments]);
 
   // Fetch pending applications (the backend GET /staff-applications returns pending applications scoped to manager's department)
   const { data: applicationsData, isLoading } = useQuery({
@@ -41,8 +55,10 @@ export function ApplicationsView() {
     queryFn: () => staffApplicationService.getApplications({ page, limit: 10 }),
   });
 
-  const departmentName =
-    user?.department?.name || (user?.departmentId ? "Department" : "Municipal Operations");
+  const managerDeptName =
+    user?.department?.name ||
+    (user?.departmentId ? departmentsMap.get(user.departmentId) : null) ||
+    "Department";
 
   // Decide mutation with optimistic update
   const decideMutation = useMutation({
@@ -60,7 +76,7 @@ export function ApplicationsView() {
         queryKey: queryKeys.staffApplications.all,
       });
 
-      const prevData = queryClient.getQueryData<PaginatedData<User>>(
+      const prevData = queryClient.getQueryData<PaginatedData<StaffApplication>>(
         queryKeys.staffApplications.list({ page, limit: 10 })
       );
 
@@ -68,7 +84,7 @@ export function ApplicationsView() {
 
       // Optimistically remove card from pending tab
       if (prevData) {
-        queryClient.setQueryData<PaginatedData<User>>(
+        queryClient.setQueryData<PaginatedData<StaffApplication>>(
           queryKeys.staffApplications.list({ page, limit: 10 }),
           {
             ...prevData,
@@ -149,7 +165,7 @@ export function ApplicationsView() {
   return (
     <div className="space-y-6 pb-20">
       <PageHeader
-        title={`${departmentName} — Staff Applications`}
+        title={`${managerDeptName !== "Department" ? managerDeptName : "Staff"} — Applications`}
         description="Review candidate credentials and appoint qualified applicants to active field technician roles."
       />
 
@@ -229,16 +245,23 @@ export function ApplicationsView() {
         />
       ) : (
         <div className="space-y-4">
-          {currentTabItems.map((application) => (
-            <ApplicationCard
-              key={application.id}
-              application={application}
-              departmentName={departmentName}
-              onApprove={handleApprove}
-              onReject={handleReject}
-              isMutating={decideMutation.isPending}
-            />
-          ))}
+          {currentTabItems.map((application) => {
+            const resolvedDeptName =
+              application.department?.name ||
+              (application.departmentId ? departmentsMap.get(application.departmentId) : null) ||
+              (managerDeptName !== "Department" ? managerDeptName : "Municipal Operations");
+
+            return (
+              <ApplicationCard
+                key={application.id}
+                application={application}
+                departmentName={resolvedDeptName}
+                onApprove={handleApprove}
+                onReject={handleReject}
+                isMutating={decideMutation.isPending}
+              />
+            );
+          })}
 
           {/* Pagination for PENDING tab */}
           {statusTab === "PENDING" && totalPages > 1 && (

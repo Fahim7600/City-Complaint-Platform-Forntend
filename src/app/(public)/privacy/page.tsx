@@ -8,12 +8,8 @@ import {
   Cookie,
   Archive,
   UserCheck,
-  Mail,
-  AlertCircle,
   FileText,
   CreditCard,
-  Bell,
-  Sparkles,
 } from "lucide-react";
 import { siteConfig } from "@/lib/site-config";
 import { Card, CardContent } from "@/components/ui/card";
@@ -179,7 +175,7 @@ export default function PrivacyPolicyPage() {
               <p>CityFix uses minimal, essential cookies required for system security and usability:</p>
               <ul className="space-y-2 list-disc list-inside text-foreground/90">
                 <li>
-                  <strong>Authentication Cookies (`cityfix_access_token` & `cityfix_user_role`):</strong> Stores your short-lived session token with `sameSite: "lax"` and `secure: true` on HTTPS connections to maintain sign-in state across pages.
+                  <strong>Authentication Cookies (`cityfix_access_token` & `cityfix_user_role`):</strong> Stores your short-lived session token with <code>sameSite: &quot;lax&quot;</code> and <code>secure: true</code> on HTTPS connections to maintain sign-in state across pages.
                 </li>
                 <li>
                   <strong>Backend Session Cookie (`refreshToken`):</strong> An encrypted `httpOnly`, `SameSite=None` cookie managed directly by the backend to securely refresh expired access tokens.

@@ -20,10 +20,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { RejectApplicationDialog } from "./reject-application-dialog";
 import { formatDate } from "@/lib/format-date";
-import type { User } from "@/types/user";
+import type { StaffApplication, User } from "@/types/user";
 
 interface ApplicationCardProps {
-  application: User;
+  application: StaffApplication | User;
   departmentName?: string;
   onApprove: (id: string) => Promise<void>;
   onReject: (id: string, reason: string) => Promise<void>;
@@ -47,7 +47,7 @@ export function ApplicationCard({
 
   const isTechnician = application.requestedRole === "TECHNICIAN";
   const isManager = application.requestedRole === "MANAGER";
-  const isPending = application.approvalStatus === "PENDING";
+  const isPending = (application.approvalStatus ?? "PENDING") === "PENDING";
 
   // Manager is only authorized to decide Technician applications in their department.
   // Admin is authorized to decide both Technician and Manager applications across all departments.
@@ -65,7 +65,9 @@ export function ApplicationCard({
     Boolean(application.qualification && application.qualification.length > 120);
 
   const targetDepartment =
-    application.department?.name || departmentName || "Municipal Operations";
+    application.department?.name ||
+    (departmentName && departmentName !== "Department" ? departmentName : null) ||
+    "Municipal Operations";
 
   return (
     <>

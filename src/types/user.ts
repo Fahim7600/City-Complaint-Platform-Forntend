@@ -90,9 +90,27 @@ export interface SubmitStaffApplicationInput {
   qualification?: string;
 }
 
+export interface StaffApplication {
+  id: string;
+  name: string;
+  email: string;
+  requestedRole: Role;
+  departmentId: string | null;
+  experience: string | null;
+  qualification: string | null;
+  createdAt: string;
+  approvalStatus: ApprovalStatus;
+  role?: Role | null;
+  avatarUrl?: string | null;
+  department?: Department | null;
+  decidedAt?: string | null;
+  decidedById?: string | null;
+}
+
 export interface StaffApplicationDecisionInput {
   decision: "APPROVED" | "REJECTED";
   reason?: string;
+  status?: "APPROVED" | "REJECTED";
 }
 
 export interface ListUsersQuery {
