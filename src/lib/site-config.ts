@@ -1,10 +1,12 @@
+import { env } from "@/lib/env";
+
 // TODO: Replace placeholder contact and social links with verified production values before submission.
 export const siteConfig = {
   name: "CityFix",
   tagline: "Report it. Track it. Get it fixed.",
   description:
     "A unified municipal complaint platform connecting citizens directly with city departments, tracking resolution deadlines under transparent SLAs, and ensuring faster civic resolution.",
-  url: process.env.NEXT_PUBLIC_APP_URL || "https://cityfix.app",
+  url: env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_APP_URL || "https://city-complaint-platform-forntend.vercel.app",
   contact: {
     address: "Civic Operations Center, Road 10, Mirpur-10, Dhaka 1216, Bangladesh",
     phone: "+880 1700-000000",

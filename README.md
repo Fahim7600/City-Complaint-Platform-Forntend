@@ -12,7 +12,7 @@
 
 ## 🔗 Live Links
 
-- **Live Application**: Coming soon — will be added after deployment
+- **Live Application**: [https://city-complaint-platform-forntend.vercel.app](https://city-complaint-platform-forntend.vercel.app)
 - **Backend API**: [https://city-complaint-platform-1.onrender.com/api/v1](https://city-complaint-platform-1.onrender.com/api/v1)
 - **API Documentation (Swagger UI)**: [https://city-complaint-platform-1.onrender.com/api-docs](https://city-complaint-platform-1.onrender.com/api-docs)
 - **Backend Repository**: [https://github.com/Fahim7600/City-Complaint-Platform](https://github.com/Fahim7600/City-Complaint-Platform)
