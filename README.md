@@ -58,6 +58,8 @@ Evaluators can access all system roles directly using the credentials below, or 
 ### 📋 Department Manager
 - **Department Queue Management**: Monitor complaints routed specifically to the manager's assigned municipal department.
 - **Technician Dispatch**: Assign unassigned complaints to active, available technicians within the department.
+- **Direct Staff Invitation**: Invite technicians directly by email with temporary passwords (valid 7 days). Technicians display an amber "Invite pending" badge with one-click "Resend invite" until first sign-in.
+- **Technician Removal & Safety Safeguards**: Remove technicians from the municipal roster (converting them to regular citizens). If the technician has active assigned work orders, the backend returns a `409 Conflict` listing blocking complaint IDs with direct links to `/manager?id=...` and guidance for Admin reassignment.
 - **Quality Control Actions**: On `RESOLVED` complaints, verify field repairs to `CLOSE` complaints or send them back to the technician with required rework notes.
 - **Escalation**: Escalate blocked or high-severity issues directly to City Administration with mandatory escalation notes.
 - **Staff Application Review**: Review incoming citizen applications for Department Technician or Manager roles with one-click approval or rejection with feedback.
@@ -66,9 +68,14 @@ Evaluators can access all system roles directly using the credentials below, or 
 - **Citywide Governance Analytics**: Real-time statistical dashboards with resolution rate KPIs, monthly trends, and department performance comparisons.
 - **Master Complaint Supervision**: Full administrative authority across all municipal complaints, status transitions, technician reassignments, and soft deletion.
 - **Department & Category Configuration**: Create and configure municipal departments, icon mappings, service categories, and SLA resolution hours.
-- **User Management**: Oversee all citizens and staff, override user roles, assign department affiliations, and deactivate/reactivate accounts.
+- **User Management & Staff Invitations**: Oversee citizens and staff, override user roles, assign department affiliations, deactivate/reactivate accounts, and directly invite `TECHNICIAN` or `MANAGER` staff by email with temporary passwords and resend-invite capabilities.
 - **Subscription & Payment Auditing**: Audit Stripe subscription statuses (`ACTIVE`, `CANCELED`, `PAST_DUE`, `INCOMPLETE`) with page-level transaction filters and revenue charts.
 - **Audit Logging**: Searchable system-wide audit trail with JSON state diff modal and one-click CSV export.
+
+### 🔐 Authentication, Password Security & Recovery
+- **Forced Password Change (`/set-password`)**: All invited staff signing in with temporary passwords (`mustChangePassword: true`) are automatically routed to set their own secure password before accessing any municipal portal. Dashboard rendering and HTTP queries are guarded to eliminate 403 error flashes, and fresh session tokens are automatically issued upon completion.
+- **Self-Service Forgot Password (`/forgot-password`)**: Citizens and staff can recover access via an emailed 6-digit OTP code sent through Brevo. Includes a 60-second cooldown timer, lockout protection, and a fluid 6-digit `OtpInput` supporting paste, keyboard navigation, and automatic submission.
+- **Brevo Email Dispatch Notice**: Transactional invitation passwords and OTP codes are delivered by the backend via Brevo. Because emails originate from a Gmail address, users are advised to check their **Spam/Junk** folder if the message does not appear within 60 seconds.
 
 ### 🌐 Public Portal (Unauthenticated)
 - **High-Impact Landing Page**: Animated gradient hero with civic photo showcase, floating metrics card, live count-up stats strip, 4-step civic resolution timeline, department previews, and FAQ accordion.
@@ -93,6 +100,10 @@ Evaluators can access all system roles directly using the credentials below, or 
 | **Public** | `/contact` | Office address, Google Maps iframe, hotline, email, and 999 notice |
 | **Auth** | `/login` | Email/password sign-in with One-Click Demo Login buttons and Google OAuth |
 | **Auth** | `/register` | New citizen registration with instant authentication and onboarding |
+| **Auth** | `/set-password` | Mandatory password update on first sign-in for staff invited with temporary credentials |
+| **Auth** | `/forgot-password` | Self-service password recovery email request with 6-digit code dispatch |
+| **Auth** | `/forgot-password/verify` | 6-digit OTP verification with 60-second cooldown timer and lockout handling |
+| **Auth** | `/reset-password` | New password selection with 15-minute token countdown and strength meter |
 | **Citizen** | `/dashboard` | Citizen overview, quick complaint submission CTA, and recent ticket activity |
 | **Citizen** | `/dashboard/complaints` | Master citizen complaints list with search, status filters, and pagination |
 | **Citizen** | `/dashboard/complaints/new` | 5-step interactive wizard for filing new municipal complaints |
