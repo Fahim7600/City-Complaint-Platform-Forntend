@@ -24,12 +24,13 @@ export const ACCESS_TOKEN_KEY = "cityfix_access_token";
 export const REFRESH_TOKEN_KEY = "refreshToken"; // Name matching backend httpOnly cookie
 export const USER_ROLE_KEY = "cityfix_user_role";
 
-const isProduction = process.env.NODE_ENV === "production";
-
-const cookieConfig: Cookies.CookieAttributes = {
-  sameSite: "lax",
-  secure: isProduction,
-  path: "/",
+export const getCookieConfig = (): Cookies.CookieAttributes => {
+  const isHttps = typeof window !== "undefined" && window.location.protocol === "https:";
+  return {
+    sameSite: "lax",
+    secure: isHttps || process.env.NODE_ENV === "production",
+    path: "/",
+  };
 };
 
 export const getAccessToken = (): string | undefined => {
@@ -49,16 +50,17 @@ export const setTokens = (tokens: {
 }): void => {
   if (typeof window === "undefined") return;
 
+  const config = getCookieConfig();
   const expires = tokens.expiresInDays ?? 7; // Default 7 days persistence
 
   Cookies.set(ACCESS_TOKEN_KEY, tokens.accessToken, {
-    ...cookieConfig,
+    ...config,
     expires,
   });
 
   if (tokens.role) {
     Cookies.set(USER_ROLE_KEY, tokens.role, {
-      ...cookieConfig,
+      ...config,
       expires,
     });
   }
@@ -66,6 +68,7 @@ export const setTokens = (tokens: {
 
 export const clearTokens = (): void => {
   if (typeof window === "undefined") return;
-  Cookies.remove(ACCESS_TOKEN_KEY, { path: "/" });
-  Cookies.remove(USER_ROLE_KEY, { path: "/" });
+  const config = getCookieConfig();
+  Cookies.remove(ACCESS_TOKEN_KEY, { path: "/", ...config });
+  Cookies.remove(USER_ROLE_KEY, { path: "/", ...config });
 };
