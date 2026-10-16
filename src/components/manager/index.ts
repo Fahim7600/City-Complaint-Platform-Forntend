@@ -15,3 +15,5 @@ export * from "./team-view";
 export * from "./application-card";
 export * from "./reject-application-dialog";
 export * from "./applications-view";
+export * from "./invite-technician-dialog";
+export * from "./blocking-complaints-dialog";
