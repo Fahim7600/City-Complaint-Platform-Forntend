@@ -47,19 +47,10 @@ export const metadata: Metadata = {
 };
 
 export default async function PricingPage() {
-  let overview = null;
-  let premiumInfo = null;
-
-  try {
-    const [ov, pi] = await Promise.all([
-      publicServerService.getOverview(),
-      publicServerService.getPremiumInfo(),
-    ]);
-    overview = ov;
-    premiumInfo = pi;
-  } catch (err) {
-    console.warn("[PricingPage] Could not load pricing details:", err);
-  }
+  const [overview, premiumInfo] = await Promise.all([
+    publicServerService.getOverview(),
+    publicServerService.getPremiumInfo(),
+  ]);
 
   const price = premiumInfo?.price || overview?.plans?.premium?.price;
   const benefits = premiumInfo?.benefits || overview?.plans?.premium?.benefits || [

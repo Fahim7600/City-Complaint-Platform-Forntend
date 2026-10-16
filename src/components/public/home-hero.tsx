@@ -152,7 +152,7 @@ export function HomeHero({ overview }: HomeHeroProps) {
                     Resolution Rate
                   </span>
                   <p className="font-heading text-2xl font-extrabold text-teal-300">
-                    {resolutionRate > 0 ? `${resolutionRate}%` : "98.4%"}
+                    {resolutionRate !== undefined && resolutionRate > 0 ? `${resolutionRate.toFixed(1)}%` : "—"}
                   </p>
                   <span className="text-[10px] text-[#f4faf7]/80 block">SLA-backed closure</span>
                 </div>
@@ -162,7 +162,7 @@ export function HomeHero({ overview }: HomeHeroProps) {
                     Avg. Fix Time
                   </span>
                   <p className="font-heading text-2xl font-extrabold text-violet-300">
-                    {avgHours > 0 ? `${avgHours}h` : "36h"}
+                    {avgHours !== undefined && avgHours > 0 ? `${avgHours.toFixed(1)}h` : "—"}
                   </p>
                   <span className="text-[10px] text-[#f4faf7]/80 block">Target category SLA</span>
                 </div>

@@ -9,10 +9,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getDepartmentIcon } from "@/components/admin/departments/department-icon-helper";
 import { DepartmentsTechniciansGrid } from "@/components/public/departments-technicians-grid";
-import type { DepartmentTechnician, Department } from "@/types/department";
-import type { Category } from "@/types/category";
+import { DataUnavailableCard } from "@/components/public/data-unavailable-card";
 
 export const revalidate = 300;
+export const dynamicParams = true;
 
 interface DepartmentDetailPageProps {
   params: Promise<{ id: string }>;
@@ -37,7 +37,7 @@ export async function generateMetadata({
 
     if (!dept) {
       return {
-        title: `Department Not Found — ${siteConfig.name}`,
+        title: `Department Details — ${siteConfig.name}`,
       };
     }
 
@@ -65,29 +65,30 @@ export default async function DepartmentDetailPage({
 }: DepartmentDetailPageProps) {
   const { id } = await params;
 
-  let department: Department | null = null;
-  let categories: Category[] = [];
-  let technicians: DepartmentTechnician[] = [];
+  const [allDepts, allCats, techList] = await Promise.all([
+    publicServerService.getDepartments(),
+    publicServerService.getCategories(),
+    publicServerService.getDepartmentTechnicians(id),
+  ]);
 
-  try {
-    const [allDepts, allCats, techList] = await Promise.all([
-      publicServerService.getDepartments(),
-      publicServerService.getCategories(),
-      publicServerService.getDepartmentTechnicians(id),
-    ]);
+  if (allDepts.length === 0) {
+    return (
+      <div className="py-12 sm:py-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <DataUnavailableCard
+          title="Live data is temporarily unavailable — refreshing shortly"
+          message="Department details are synchronizing with municipal servers. Please check back shortly."
+        />
+      </div>
+    );
+  }
 
-    const found = allDepts.find((d) => d.id === id);
-    if (!found) {
-      notFound();
-    }
-
-    department = found;
-    categories = allCats.filter((c) => c.departmentId === id);
-    technicians = techList;
-  } catch (error) {
-    console.error("[DepartmentDetailPage] Error loading department detail:", error);
+  const department = allDepts.find((d) => d.id === id);
+  if (!department) {
     notFound();
   }
+
+  const categories = allCats.filter((c) => c.departmentId === id);
+  const technicians = techList;
 
   return (
     <div className="py-10 sm:py-16 space-y-12">

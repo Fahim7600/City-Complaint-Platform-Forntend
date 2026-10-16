@@ -11,7 +11,6 @@ import {
 import { publicServerService } from "@/services/public.server";
 import { siteConfig } from "@/lib/site-config";
 import { StatCard } from "@/components/shared/stat-card";
-import type { PublicStats } from "@/types/stats";
 
 export const revalidate = 300;
 
@@ -48,20 +47,42 @@ export const metadata: Metadata = {
 };
 
 import { StatsChartsWrapper } from "@/components/public/stats-charts-wrapper";
+import { DataUnavailableCard } from "@/components/public/data-unavailable-card";
 
 export default async function StatsPage() {
-  let stats: PublicStats | null = null;
-  try {
-    stats = await publicServerService.getStats();
-  } catch (error) {
-    console.warn("[StatsPage] Could not load public stats:", error);
+  const stats = await publicServerService.getStats();
+
+  if (!stats) {
+    return (
+      <div className="py-12 sm:py-20 space-y-12">
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center max-w-3xl space-y-4">
+          <div className="inline-flex items-center gap-2 rounded-full px-3.5 py-1 text-xs font-bold bg-teal-500/15 border border-teal-500/30 text-teal-600 dark:text-teal-400">
+            <Sparkles className="size-3.5" />
+            <span>Real-Time Civic Transparency</span>
+          </div>
+          <h1 className="font-heading text-4xl sm:text-5xl font-black text-foreground tracking-tight">
+            Citywide Resolution Metrics
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+            Aggregated municipal performance indicators backed by verified field repairs and guaranteed SLA countdowns.
+          </p>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <DataUnavailableCard
+            title="Live data is temporarily unavailable — refreshing shortly"
+            message="Citywide complaint resolution metrics are synchronizing with municipal systems. This page automatically updates via ISR."
+          />
+        </section>
+      </div>
+    );
   }
 
-  const totalComplaints = stats?.totalComplaints || 0;
-  const resolvedCount = stats?.resolvedCount || 0;
-  const resolutionRate = stats?.resolutionRate || 0;
-  const avgHours = stats?.averageResolutionHours || 0;
-  const countsByStatus = stats?.countsByStatus || {};
+  const totalComplaints = stats.totalComplaints || 0;
+  const resolvedCount = stats.resolvedCount || 0;
+  const resolutionRate = stats.resolutionRate || 0;
+  const avgHours = stats.averageResolutionHours || 0;
+  const countsByStatus = stats.countsByStatus || {};
 
   return (
     <div className="py-12 sm:py-20 space-y-16">

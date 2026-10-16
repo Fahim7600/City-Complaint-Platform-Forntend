@@ -4,8 +4,7 @@ import { Sparkles } from "lucide-react";
 import { publicServerService } from "@/services/public.server";
 import { siteConfig } from "@/lib/site-config";
 import { DepartmentsSearchGrid } from "@/components/public/departments-search-grid";
-import type { Department } from "@/types/department";
-import type { Category } from "@/types/category";
+import { DataUnavailableCard } from "@/components/public/data-unavailable-card";
 
 export const revalidate = 300;
 
@@ -42,19 +41,10 @@ export const metadata: Metadata = {
 };
 
 export default async function DepartmentsPage() {
-  let departments: Department[] = [];
-  let categories: Category[] = [];
-
-  try {
-    const [depts, cats] = await Promise.all([
-      publicServerService.getDepartments(),
-      publicServerService.getCategories(),
-    ]);
-    departments = depts;
-    categories = cats;
-  } catch (error) {
-    console.warn("[DepartmentsPage] Could not load departments:", error);
-  }
+  const [departments, categories] = await Promise.all([
+    publicServerService.getDepartments(),
+    publicServerService.getCategories(),
+  ]);
 
   return (
     <div className="py-12 sm:py-20 space-y-12">
@@ -74,10 +64,17 @@ export default async function DepartmentsPage() {
 
       {/* Main Grid with Search Island */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <DepartmentsSearchGrid
-          departments={departments}
-          categories={categories}
-        />
+        {departments.length === 0 ? (
+          <DataUnavailableCard
+            title="Live data is temporarily unavailable — refreshing shortly"
+            message="The municipal department directory is synchronizing with city systems. Please check back shortly."
+          />
+        ) : (
+          <DepartmentsSearchGrid
+            departments={departments}
+            categories={categories}
+          />
+        )}
       </section>
     </div>
   );

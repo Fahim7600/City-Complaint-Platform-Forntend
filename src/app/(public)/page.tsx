@@ -10,7 +10,6 @@ import { HomeCategoriesPreview } from "@/components/public/home-categories-previ
 import { HomePremiumTeaser } from "@/components/public/home-premium-teaser";
 import { HomeFaqAccordion } from "@/components/public/home-faq-accordion";
 import { HomeCtaBand } from "@/components/public/home-cta-band";
-import type { PublicOverview } from "@/types/stats";
 
 export const revalidate = 300; // 5 minutes matching backend Redis cache
 
@@ -44,12 +43,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  let overview: PublicOverview | null = null;
-  try {
-    overview = await publicServerService.getOverview();
-  } catch (error) {
-    console.warn("[HomePage] Could not fetch public overview:", error);
-  }
+  const overview = await publicServerService.getOverview();
 
   const departments = overview?.departments || [];
   const categories = overview?.categories || [];

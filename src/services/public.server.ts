@@ -9,33 +9,37 @@ import type { PublicOverview, PublicStats } from "@/types/stats";
 /**
  * Server Component equivalents of public service methods,
  * utilizing Next.js native fetch with 5-minute cache revalidation.
+ * Automatically handles unreachable backend by returning safe fallback data/null.
  */
 export const publicServerService = {
   async getDepartments(): Promise<Department[]> {
-    return serverFetch<Department[]>("/public/departments");
+    const data = await serverFetch<Department[]>("/public/departments");
+    return data ?? [];
   },
 
   async getDepartmentTechnicians(
     departmentId: string
   ): Promise<DepartmentTechnician[]> {
-    return serverFetch<DepartmentTechnician[]>(
+    const data = await serverFetch<DepartmentTechnician[]>(
       `/public/departments/${departmentId}/technicians`
     );
+    return data ?? [];
   },
 
   async getCategories(): Promise<Category[]> {
-    return serverFetch<Category[]>("/public/categories");
+    const data = await serverFetch<Category[]>("/public/categories");
+    return data ?? [];
   },
 
-  async getStats(): Promise<PublicStats> {
+  async getStats(): Promise<PublicStats | null> {
     return serverFetch<PublicStats>("/public/stats");
   },
 
-  async getPremiumInfo(): Promise<PublicPremiumInfo> {
+  async getPremiumInfo(): Promise<PublicPremiumInfo | null> {
     return serverFetch<PublicPremiumInfo>("/public/premium-info");
   },
 
-  async getOverview(): Promise<PublicOverview> {
+  async getOverview(): Promise<PublicOverview | null> {
     return serverFetch<PublicOverview>("/public/overview");
   },
 };

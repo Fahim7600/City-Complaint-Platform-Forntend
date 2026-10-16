@@ -10,6 +10,7 @@ export interface ServerFetchOptions extends RequestInit {
     revalidate?: number | false;
     tags?: string[];
   };
+  timeoutMs?: number;
 }
 
 /**
@@ -17,11 +18,13 @@ export interface ServerFetchOptions extends RequestInit {
  * - Reads access token securely from next/headers cookies().
  * - Automatically defaults public endpoints (/public/...) to 300s (5min) revalidation,
  *   aligning with the backend's Redis cache TTL.
+ * - Built-in 20-second timeout to prevent build failures when Render free-tier backend is asleep.
+ * - For public paths, returns null on network failures/timeouts so static builds never crash.
  */
 export async function serverFetch<T>(
   path: string,
   options: ServerFetchOptions = {}
-): Promise<T> {
+): Promise<T | null> {
   const isPublicPath = path.includes("/public/");
   let token: string | undefined;
 
@@ -57,26 +60,51 @@ export async function serverFetch<T>(
     }
   }
 
-  const response = await fetch(url, fetchOptions);
+  // 20s timeout controller to accommodate Render cold-starts without hanging builds
+  const timeoutMs = options.timeoutMs ?? 20000;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-  if (!response.ok) {
-    let errorMessage = `Server fetch failed with status ${response.status}`;
-    try {
-      const errorJson = (await response.json()) as ApiResponse;
-      if (errorJson.message) {
-        errorMessage = errorJson.message;
+  if (options.signal) {
+    options.signal.addEventListener("abort", () => controller.abort());
+  }
+
+  try {
+    const response = await fetch(url, {
+      ...fetchOptions,
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      if (isPublicPath) {
+        return null;
       }
-    } catch {
-      // Non-JSON error body fallback
+      let errorMessage = `Server fetch failed with status ${response.status}`;
+      try {
+        const errorJson = (await response.json()) as ApiResponse;
+        if (errorJson.message) {
+          errorMessage = errorJson.message;
+        }
+      } catch {
+        // Non-JSON error body fallback
+      }
+      throw new Error(errorMessage);
     }
-    throw new Error(errorMessage);
+
+    const result = (await response.json()) as ApiResponse<T>;
+
+    if (result.success === false) {
+      if (isPublicPath) return null;
+      throw new Error(result.message || "Failed to fetch data");
+    }
+
+    return (result.data as T) ?? null;
+  } catch (error) {
+    if (isPublicPath) {
+      return null;
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  const result = (await response.json()) as ApiResponse<T>;
-
-  if (result.success === false) {
-    throw new Error(result.message || "Failed to fetch data");
-  }
-
-  return result.data as T;
 }

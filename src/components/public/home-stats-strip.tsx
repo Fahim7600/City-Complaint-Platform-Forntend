@@ -3,6 +3,7 @@
 import * as React from "react";
 import { CheckCircle2, Clock, FileText, Percent } from "lucide-react";
 import { useInView } from "@/hooks/use-in-view";
+import { DataUnavailableCard } from "./data-unavailable-card";
 import type { PublicStats } from "@/types/stats";
 
 interface HomeStatsStripProps {
@@ -61,6 +62,17 @@ export function HomeStatsStrip({ stats }: HomeStatsStripProps) {
   const countResolved = useCountUp(resolvedCount, 1600, inView);
   const countRate = useCountUp(resolutionRate, 1400, inView);
   const countHours = useCountUp(avgHours, 1400, inView);
+
+  if (!stats) {
+    return (
+      <section className="relative -mt-10 z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <DataUnavailableCard
+          title="Live data is temporarily unavailable — refreshing shortly"
+          message="Civic resolution metrics are synchronizing with municipal systems. This section automatically refreshes via ISR."
+        />
+      </section>
+    );
+  }
 
   const metrics = [
     {

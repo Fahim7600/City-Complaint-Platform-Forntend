@@ -54,12 +54,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  let overview = null;
-  try {
-    overview = await publicServerService.getOverview();
-  } catch (err) {
-    console.warn("[AboutPage] Could not fetch public overview:", err);
-  }
+  const overview = await publicServerService.getOverview();
 
   const rolesData = overview?.roles || {
     citizen: [
