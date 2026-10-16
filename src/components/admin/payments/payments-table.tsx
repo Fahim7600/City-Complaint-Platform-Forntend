@@ -10,7 +10,6 @@ import {
   Crown,
   Mail,
   ShieldAlert,
-  User,
   XCircle,
 } from "lucide-react";
 import { toast } from "sonner";

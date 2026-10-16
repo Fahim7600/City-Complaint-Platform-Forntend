@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import { Providers } from "@/components/providers";
+import { env } from "@/lib/env";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -15,7 +16,6 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
-// TODO: Confirm final brand name if different from "CityFix"
 export const metadata: Metadata = {
   title: {
     default: "CityFix — City Complaint & Civic Service Platform",
@@ -33,9 +33,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "CityFix Civic Team" }],
   creator: "CityFix",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-  ),
+  metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
   openGraph: {
     type: "website",
     locale: "en_US",

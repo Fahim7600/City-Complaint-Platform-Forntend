@@ -32,7 +32,6 @@ export function PricingView() {
   // 1. Fetch Admin Premium Pricing from Stripe via backend
   const {
     data: adminPricing,
-    isLoading: isAdminPricingLoading,
     isError: isAdminPricingError,
     refetch: refetchPricing,
   } = useQuery<AdminPremiumPricing>({
