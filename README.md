@@ -83,7 +83,7 @@ Evaluators can access all system roles directly using the credentials below, or 
 - **Departments & SLAs**: Searchable department directory with SLA target resolution chips and individual department detail pages displaying technician star ratings.
 - **Citywide Transparency Stats**: Real-time resolution metrics with dynamic Recharts breakdowns refreshed every 5 minutes.
 - **Pricing & Comparison**: Free vs. Premium comparison matrix and live Stripe billing terms.
-- **Contact Directory**: Hotline `16263`, phone, email, support operating hours, 999 emergency banner, and an embedded Mirpur-10 Dhaka Google Maps view.
+- **Contact Directory**: Direct phone support, official email desk, support operating hours, 999 emergency banner, and an embedded Aftabnagar Dhaka Google Maps view.
 
 ---
 
@@ -312,5 +312,6 @@ This project strictly adheres to [Conventional Commits](https://www.conventional
 ## 👨‍💻 Author
 
 **Md. Habibur Rahman**  
+- **Email**: [arfanahmedfahim832@gmail.com](mailto:arfanahmedfahim832@gmail.com)  
 - **GitHub**: [@Fahim7600](https://github.com/Fahim7600)  
 - **Project**: CityFix City Complaint & Service Platform (Frontend)

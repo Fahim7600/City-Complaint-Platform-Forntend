@@ -237,7 +237,10 @@ export default function TermsOfServicePage() {
                   </a>
                 </p>
                 <p>
-                  <strong>Hotline:</strong> {siteConfig.contact.hotline}
+                  <strong>Phone:</strong>{" "}
+                  <a href={siteConfig.contact.phoneHref} className="text-teal-600 dark:text-teal-400 font-semibold hover:underline">
+                    {siteConfig.contact.phone}
+                  </a>
                 </p>
                 <p>
                   <strong>Address:</strong> {siteConfig.contact.address}

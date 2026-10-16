@@ -18,11 +18,11 @@ import { Button } from "@/components/ui/button";
 export const metadata: Metadata = {
   title: `Contact & Operations Center — ${siteConfig.name}`,
   description:
-    "Get in touch with the CityFix Civic Operations Center. Direct hotline, operational office location, support hours, and emergency contacts.",
+    "Get in touch with the CityFix Civic Operations Center. Direct phone assistance, operational office location, support hours, and emergency contacts.",
   openGraph: {
     title: `Contact & Operations Center — ${siteConfig.name}`,
     description:
-      "Get in touch with the CityFix Civic Operations Center. Direct hotline, operational office location, support hours, and emergency contacts.",
+      "Get in touch with the CityFix Civic Operations Center. Direct phone assistance, operational office location, support hours, and emergency contacts.",
     url: `${siteConfig.url}/contact`,
     siteName: siteConfig.name,
     images: [
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `Contact & Operations Center — ${siteConfig.name}`,
     description:
-      "Get in touch with the CityFix Civic Operations Center. Direct hotline, operational office location, support hours, and emergency contacts.",
+      "Get in touch with the CityFix Civic Operations Center. Direct phone assistance, operational office location, support hours, and emergency contacts.",
     images: [
       "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format&fit=crop",
     ],
@@ -84,36 +84,28 @@ export default function ContactPage() {
       {/* 3. Contact Info Cards Grid */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Card 1: Hotline & Phone */}
+          {/* Card 1: Phone Support */}
           <div className="p-6 rounded-3xl border border-border/80 bg-card/60 backdrop-blur-sm space-y-4 hover:border-teal-500/40 transition-colors">
             <div className="size-12 rounded-2xl bg-teal-500/15 border border-teal-500/30 text-teal-600 dark:text-teal-400 flex items-center justify-center">
               <Phone className="size-6" />
             </div>
             <div className="space-y-1">
               <h3 className="font-heading font-bold text-base text-foreground">
-                Hotline & Phone
+                Phone Support
               </h3>
               <p className="text-xs text-muted-foreground">Direct municipal dispatch call</p>
             </div>
             <div className="space-y-1.5 pt-1 text-xs">
-              <div>
-                <span className="text-muted-foreground text-[11px] block">Civic Hotline:</span>
-                <a
-                  href={`tel:${siteConfig.contact.hotline}`}
-                  className="font-bold text-foreground text-sm hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
-                >
-                  {siteConfig.contact.hotline} (Toll-Free)
-                </a>
-              </div>
-              <div className="pt-1">
-                <span className="text-muted-foreground text-[11px] block">Direct Line:</span>
-                <a
-                  href={`tel:${siteConfig.contact.phone}`}
-                  className="font-semibold text-foreground hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
-                >
-                  {siteConfig.contact.phone}
-                </a>
-              </div>
+              <span className="text-muted-foreground text-[11px] block">Direct Line:</span>
+              <a
+                href={siteConfig.contact.phoneHref}
+                className="font-bold text-foreground text-sm hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+              >
+                {siteConfig.contact.phone}
+              </a>
+              <span className="text-[10px] text-muted-foreground block pt-1">
+                Available during operational hours
+              </span>
             </div>
           </div>
 
@@ -185,19 +177,30 @@ export default function ContactPage() {
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Google Maps Embed iframe */}
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-8 space-y-3">
             <div className="relative w-full h-[360px] sm:h-[420px] rounded-3xl overflow-hidden border border-border/80 shadow-2xl bg-muted">
               <iframe
                 title="CityFix Civic Operations Center Location Map"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14602.700319409893!2d90.366479!3d23.806653!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c0d6f6e8c221%3A0x6b4fb6642f88f4e6!2sMirpur-10%2C%20Dhaka!5e0!3m2!1sen!2sbd!4v1700000000000!5m2!1sen!2sbd"
+                src="https://www.google.com/maps?q=Aftabnagar+Block+D+Road+5+Dhaka&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen={false}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                className="w-full h-full filter contrast-[1.05] grayscale-[20%]"
+                className="w-full h-full filter contrast-[1.05]"
               />
+            </div>
+            <div className="flex justify-end">
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Aftabnagar+Block+D+Road+5+Dhaka"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-600 dark:text-teal-400 hover:underline"
+              >
+                <span>Open in Google Maps</span>
+                <ExternalLink className="size-3.5" />
+              </a>
             </div>
           </div>
 

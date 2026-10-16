@@ -196,7 +196,7 @@ export function PublicFooter({ departments = [] }: PublicFooterProps) {
               <div className="flex items-center gap-2">
                 <Phone className="size-3.5 text-teal-400 shrink-0" />
                 <a
-                  href={`tel:${siteConfig.contact.phone}`}
+                  href={siteConfig.contact.phoneHref}
                   className="hover:text-white transition-colors"
                 >
                   {siteConfig.contact.phone}
