@@ -225,10 +225,25 @@ export function PublicFooter({ departments = [] }: PublicFooterProps) {
           </div>
         </div>
 
-        {/* Bottom Bar: Copyright */}
+        {/* Bottom Bar: Copyright & Legal Links */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#9ad6c9]">
           <p>© {currentYear} {siteConfig.name}. All rights reserved.</p>
-          <p className="flex items-center gap-1.5">
+          <div className="flex items-center gap-4 text-xs font-medium">
+            <Link
+              href="/privacy"
+              className="hover:text-white hover:underline transition-colors"
+            >
+              Privacy Policy
+            </Link>
+            <span className="opacity-40">•</span>
+            <Link
+              href="/terms"
+              className="hover:text-white hover:underline transition-colors"
+            >
+              Terms of Service
+            </Link>
+          </div>
+          <p className="flex items-center gap-1.5 text-[11px] opacity-80">
             <span>Built with Next.js, TypeScript & Tailwind CSS</span>
           </p>
         </div>
