@@ -26,12 +26,12 @@ export function DashboardShell({
   role: forcedRole,
   className,
 }: DashboardShellProps) {
-  const { role: authRole, isLoading } = useAuth();
+  const { user, role: authRole, isLoading } = useAuth();
 
   const effectiveRole = forcedRole || authRole || "CITIZEN";
 
-  // While user session is loading, show a full shell skeleton (never a blank screen)
-  if (isLoading) {
+  // While user session is loading or if user must change password, show a full shell skeleton (never a blank screen, prevents 403 toasts before redirect)
+  if (isLoading || user?.mustChangePassword) {
     return (
       <div className="flex h-screen w-full overflow-hidden bg-background">
         {/* Sidebar skeleton (desktop) */}

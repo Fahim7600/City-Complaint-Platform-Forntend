@@ -28,7 +28,19 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  const isAuthRoute = pathname === "/login" || pathname === "/register";
+  const isAuthRoute =
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname === "/forgot-password" ||
+    pathname === "/forgot-password/verify" ||
+    pathname === "/reset-password";
+
+  // /set-password requires a logged-in user; if not logged in, redirect to /login
+  if (pathname === "/set-password" && !userRole) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirect", "/set-password");
+    return NextResponse.redirect(loginUrl);
+  }
 
   const isPaymentSuccessRoute =
     pathname.startsWith("/payment/success") ||
@@ -43,7 +55,7 @@ export function proxy(request: NextRequest) {
     pathname.startsWith("/notifications") ||
     isPaymentSuccessRoute;
 
-  // 1. If logged-in user visits /login or /register, redirect to their role home
+  // 1. If logged-in user visits public auth routes, redirect to their role home
   if (isAuthRoute && userRole) {
     const homeUrl = new URL(ROLE_HOME[userRole] || "/dashboard", request.url);
     return NextResponse.redirect(homeUrl);

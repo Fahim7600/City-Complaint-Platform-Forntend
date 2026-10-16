@@ -35,11 +35,18 @@ export function useAuth() {
     // 3. Invalidate/set query cache for auth me
     queryClient.setQueryData(queryKeys.auth.me(), authenticatedUser);
 
-    // 4. Welcome toast
+    // 4. Forced password change guard
+    if (authenticatedUser.mustChangePassword) {
+      toast.info("Please set a new password to continue");
+      router.replace("/set-password");
+      return;
+    }
+
+    // 5. Welcome toast
     const firstName = authenticatedUser.name.split(" ")[0] || authenticatedUser.name;
     toast.success(`Welcome back, ${firstName}!`);
 
-    // 5. Determine destination
+    // 6. Determine destination
     const defaultHome = ROLE_HOME[authenticatedUser.role] || "/dashboard";
 
     let destination = defaultHome;

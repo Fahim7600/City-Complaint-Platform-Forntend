@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { clearTokens, getAccessToken } from "@/lib/auth-cookies";
 import { queryKeys } from "@/lib/query-keys";
@@ -10,6 +12,7 @@ import { useAuthStore } from "@/store/auth-store";
 const emptySubscribe = () => () => {};
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const { setUser, clearUser, setLoading } = useAuthStore();
 
   // Hydration-safe external token check without cascading setState in effect
@@ -36,13 +39,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (isSuccess && user) {
       setUser(user);
+      if (user.mustChangePassword) {
+        const pathname =
+          typeof window !== "undefined" ? window.location.pathname : "";
+        if (!pathname.startsWith("/set-password")) {
+          toast.info("Please set a new password to continue");
+          router.replace("/set-password");
+        }
+      }
     } else if (isError) {
       clearTokens();
       clearUser();
     } else if (isLoading) {
       setLoading(true);
     }
-  }, [hasToken, isSuccess, user, isError, isLoading, setUser, clearUser, setLoading]);
+  }, [hasToken, isSuccess, user, isError, isLoading, setUser, clearUser, setLoading, router]);
 
   return <>{children}</>;
 }

@@ -74,7 +74,10 @@ export function PublicAuthButtons({
   }
 
   const effectiveRole = role || user.role || "CITIZEN";
-  const dashboardHref = ROLE_HOME[effectiveRole] || "/dashboard";
+  const isMustChange = Boolean(user.mustChangePassword);
+  const dashboardHref = isMustChange
+    ? "/set-password"
+    : ROLE_HOME[effectiveRole] || "/dashboard";
   const profileHref = `${dashboardHref}/profile`;
   const initials =
     user.name
@@ -92,7 +95,7 @@ export function PublicAuthButtons({
           className="text-xs font-semibold bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 text-white shadow-md shadow-teal-500/25 hover:shadow-lg hover:shadow-teal-500/35 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 gap-1.5"
         >
           <LayoutDashboard className="size-3.5" />
-          <span>Go to dashboard</span>
+          <span>{isMustChange ? "Set password" : "Go to dashboard"}</span>
         </Button>
       </Link>
 

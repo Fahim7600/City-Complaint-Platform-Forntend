@@ -44,6 +44,22 @@ apiClient.interceptors.response.use(
     }
 
     const is401 = error.response?.status === 401;
+    const is403 = error.response?.status === 403;
+    const errorData = error.response?.data as
+      | { code?: string; message?: string }
+      | undefined;
+
+    // On 403 with code PASSWORD_CHANGE_REQUIRED, redirect to /set-password, no error toast, and do not retry
+    if (is403 && errorData?.code === "PASSWORD_CHANGE_REQUIRED") {
+      if (
+        typeof window !== "undefined" &&
+        !window.location.pathname.startsWith("/set-password")
+      ) {
+        window.location.replace("/set-password");
+      }
+      return Promise.reject(error);
+    }
+
     const requestUrl = originalRequest.url || "";
     const isAuthRoute =
       requestUrl.includes("/auth/login") ||
@@ -117,6 +133,13 @@ export const getErrorMessage = (error: unknown): string => {
     }
 
     const data = error.response?.data as ApiResponse | undefined;
+
+    const rawData = error.response?.data as
+      | { code?: string; message?: string }
+      | undefined;
+    if (rawData?.code === "PASSWORD_CHANGE_REQUIRED") {
+      return "";
+    }
 
     // 3. 403 whose message is "Origin not allowed by CORS"
     if (
